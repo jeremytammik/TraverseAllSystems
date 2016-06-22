@@ -28,6 +28,7 @@ using Autodesk.Revit;
 using Autodesk.Revit.DB;
 using Autodesk.Revit.DB.Mechanical;
 using Autodesk.Revit.DB.Plumbing;
+using System.Diagnostics;
 
 namespace TraverseAllSystems
 {
@@ -243,6 +244,12 @@ namespace TraverseAllSystems
     private Boolean m_isMechanicalSystem;
     // The starting element node
     private TreeNode m_startingElementNode;
+
+    /// <summary>
+    /// Map element id integer to the number 
+    /// of times the element has been visited.
+    /// </summary>
+    Dictionary<int, int> _visitedElementCount;
     #endregion
 
     #region Methods
@@ -256,6 +263,7 @@ namespace TraverseAllSystems
       m_document = system.Document;
       m_system = system;
       m_isMechanicalSystem = ( system is MechanicalSystem );
+      _visitedElementCount = new Dictionary<int, int>();
     }
 
     /// <summary>
@@ -414,6 +422,23 @@ namespace TraverseAllSystems
     /// <param name="elementNode">The element to be analyzed</param>
     private void Traverse( TreeNode elementNode )
     {
+      int id = elementNode.Id.IntegerValue;
+
+      // Terminate if we revisit a node we have already inspected:
+
+      if( _visitedElementCount.ContainsKey( id ) )
+      {
+        return;
+      }
+
+      // Otherwise, add the new node to the collection of visited elements:
+
+      if( !_visitedElementCount.ContainsKey( id ) )
+      {
+        _visitedElementCount.Add( id, 0 );
+      }
+      ++_visitedElementCount[id];
+
       //
       // Find all child nodes and analyze them recursively
       AppendChildren( elementNode );
@@ -431,9 +456,12 @@ namespace TraverseAllSystems
     {
       List<TreeNode> nodes = elementNode.ChildNodes;
       ConnectorSet connectors;
-      //
+
       // Get connector manager
       Element element = GetElementById( elementNode.Id );
+
+      Debug.Print( element.Id.IntegerValue.ToString() );
+
       FamilyInstance fi = element as FamilyInstance;
       if( fi != null )
       {

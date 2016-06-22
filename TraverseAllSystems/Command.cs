@@ -23,11 +23,14 @@ namespace TraverseAllSystems
     /// Return true to include this system in the 
     /// exported system graphs.
     /// </summary>
-    static bool IsDesirableSystemPredicate(MEPSystem s)
+    static bool IsDesirableSystemPredicate( MEPSystem s )
     {
-      return s is MechanicalSystem || s is PipingSystem
+      return 1 < s.Elements.Size
         && !s.Name.Equals( "unassigned" )
-        && 1 < s.Elements.Size;
+        && ( ( s is MechanicalSystem 
+            && ( (MechanicalSystem) s ).IsWellConnected )
+          || ( s is PipingSystem 
+            && ( (PipingSystem) s ).IsWellConnected ) );
     }
 
     /// <summary>
@@ -35,7 +38,7 @@ namespace TraverseAllSystems
     /// </summary>
     static string GetTemporaryDirectory()
     {
-      string tempDirectory = Path.Combine( 
+      string tempDirectory = Path.Combine(
         Path.GetTempPath(), Path.GetRandomFileName() );
 
       Directory.CreateDirectory( tempDirectory );
@@ -59,12 +62,12 @@ namespace TraverseAllSystems
 
       int nAllSystems = allSystems.Count<Element>();
 
-      IEnumerable<MEPSystem> desirableSystems 
-        = allSystems
-          .Cast<MEPSystem>()
-          .Where<MEPSystem>( s => IsDesirableSystemPredicate( s ) );
+      IEnumerable<MEPSystem> desirableSystems
+        = allSystems.Cast<MEPSystem>().Where<MEPSystem>(
+          s => IsDesirableSystemPredicate( s ) );
 
-      int nDesirableSystems = desirableSystems.Count<Element>();
+      int nDesirableSystems = desirableSystems
+        .Count<Element>();
 
       string outputFolder = GetTemporaryDirectory();
 
@@ -74,9 +77,14 @@ namespace TraverseAllSystems
       {
         Debug.Print( system.Name );
 
+        // Debug test -- limit to HWS systems.
+        //if( !system.Name.StartsWith( "HWS" ) ) { continue; }
+
         FamilyInstance root = system.BaseEquipment;
 
-        // Traverse the system and dump the traversal into an XML file
+        // Traverse the system and dump the 
+        // traversal graph into an XML file
+
         TraversalTree tree = new TraversalTree( system );
 
         if( tree.Traverse() )
@@ -87,15 +95,21 @@ namespace TraverseAllSystems
             Path.Combine( outputFolder, filename ), "xml" );
 
           tree.DumpIntoXML( filename );
+
+          // Uncomment to preview the 
+          // resulting XML structure
+
           //Process.Start( fileName );
 
           ++n;
         }
       }
 
-      string main = string.Format( 
-        "{0} XML files generated in {1} ({2} total systems, {3} desirable):",
-        n, outputFolder, nAllSystems, nDesirableSystems );
+      string main = string.Format(
+        "{0} XML files generated in {1} ({2} total"
+        + "systems, {3} desirable):",
+        n, outputFolder, nAllSystems,
+        nDesirableSystems );
 
       List<string> system_list = desirableSystems
         .Select<Element, string>( e =>
@@ -104,9 +118,11 @@ namespace TraverseAllSystems
 
       system_list.Sort();
 
-      string detail = string.Join( ", ", system_list.ToArray<string>() );
+      string detail = string.Join( ", ",
+        system_list.ToArray<string>() );
 
-      TaskDialog dlg = new TaskDialog( n.ToString() + " Systems" );
+      TaskDialog dlg = new TaskDialog( n.ToString()
+        + " Systems" );
 
       dlg.MainInstruction = main;
       dlg.MainContent = detail;
