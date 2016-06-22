@@ -9,6 +9,8 @@ using Autodesk.Revit.UI;
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
+using Autodesk.Revit.DB.Mechanical;
+using Autodesk.Revit.DB.Plumbing;
 //using Autodesk.Revit.UI.Selection;
 #endregion
 
@@ -18,9 +20,20 @@ namespace TraverseAllSystems
   public class Command : IExternalCommand
   {
     /// <summary>
+    /// Return true to include this system in the 
+    /// exported system graphs.
+    /// </summary>
+    static bool IsDesirableSystemPredicate(MEPSystem s)
+    {
+      return s is MechanicalSystem || s is PipingSystem
+        && !s.Name.Equals( "unassigned" )
+        && 1 < s.Elements.Size;
+    }
+
+    /// <summary>
     /// Create a and return the path of a random temporary directory.
     /// </summary>
-    public string GetTemporaryDirectory()
+    static string GetTemporaryDirectory()
     {
       string tempDirectory = Path.Combine( 
         Path.GetTempPath(), Path.GetRandomFileName() );
@@ -40,13 +53,24 @@ namespace TraverseAllSystems
       Application app = uiapp.Application;
       Document doc = uidoc.Document;
 
-      FilteredElementCollector systems
+      FilteredElementCollector allSystems
         = new FilteredElementCollector( doc )
           .OfClass( typeof( MEPSystem ) );
 
+      int nAllSystems = allSystems.Count<Element>();
+
+      IEnumerable<MEPSystem> desirableSystems 
+        = allSystems
+          .Cast<MEPSystem>()
+          .Where<MEPSystem>( s => IsDesirableSystemPredicate( s ) );
+
+      int nDesirableSystems = desirableSystems.Count<Element>();
+
       string outputFolder = GetTemporaryDirectory();
 
-      foreach( MEPSystem system in systems )
+      int n = 0;
+
+      foreach( MEPSystem system in desirableSystems )
       {
         Debug.Print( system.Name );
 
@@ -55,7 +79,7 @@ namespace TraverseAllSystems
         // Traverse the system and dump the traversal into an XML file
         TraversalTree tree = new TraversalTree( system );
 
-        if( null != tree.Traverse() )
+        if( tree.Traverse() )
         {
           string filename = system.Id.IntegerValue.ToString();
 
@@ -64,22 +88,16 @@ namespace TraverseAllSystems
 
           tree.DumpIntoXML( filename );
           //Process.Start( fileName );
+
+          ++n;
         }
       }
 
-      int n = systems.Count<Element>();
-
-      //string system_names = string.Join( ", ", 
-      //  systems
-      //    .Select<Element, string>( e => e.Name )
-      //    .ToArray<string>() );
-
-
       string main = string.Format( 
-        "{0} XML files generated in {1}:",
-        n, outputFolder );
+        "{0} XML files generated in {1} ({2} total systems, {3} desirable):",
+        n, outputFolder, nAllSystems, nDesirableSystems );
 
-      List<string> system_list = systems
+      List<string> system_list = desirableSystems
         .Select<Element, string>( e =>
           string.Format( "{0}({1})", e.Id, e.Name ) )
         .ToList<string>();

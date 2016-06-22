@@ -294,7 +294,11 @@ namespace TraverseAllSystems
       }
       else
       {
-        startingElementNode = new TreeNode( m_document, GetOwnerOfOpenConnector().Id );
+        Element root = GetOwnerOfOpenConnector();
+        if( null != root )
+        {
+          startingElementNode = new TreeNode( m_document, root.Id );
+        }
       }
 
       if(null != startingElementNode )
@@ -627,16 +631,16 @@ namespace TraverseAllSystems
       writer.WriteEndElement();
 
       // Write Flow property
-      writer.WriteStartElement( "Flow" );
-      if( m_isMechanicalSystem )
-      {
-        writer.WriteValue( ms.GetFlow() );
-      }
-      else
-      {
-        writer.WriteValue( ps.GetFlow() );
-      }
-      writer.WriteEndElement();
+      //writer.WriteStartElement( "Flow" );
+      //if( m_isMechanicalSystem )
+      //{
+      //  writer.WriteValue( ms.GetFlow() );
+      //}
+      //else
+      //{
+      //  writer.WriteValue( ps.GetFlow() );
+      //}
+      //writer.WriteEndElement();
 
       // Close basic information
       writer.WriteEndElement();
