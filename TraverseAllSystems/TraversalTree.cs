@@ -189,6 +189,8 @@ namespace TraverseAllSystems
       string json = string.Format(
         _json_format, uid, parent_uid, e.Name );
 
+      json_collector.Add( json );
+
       foreach( TreeNode node in m_childNodes )
       {
         node.DumpToJson( json_collector, uid );
@@ -489,9 +491,10 @@ namespace TraverseAllSystems
       ConnectorSet connectors;
 
       // Get connector manager
+
       Element element = GetElementById( elementNode.Id );
 
-      Debug.Print( element.Id.IntegerValue.ToString() );
+      //Debug.Print( element.Id.IntegerValue.ToString() );
 
       FamilyInstance fi = element as FamilyInstance;
       if( fi != null )

@@ -83,7 +83,9 @@ namespace TraverseAllSystems
 
       string outputFolder = GetTemporaryDirectory();
 
-      int n = 0;
+      int nXmlFiles = 0;
+      int nJsonGraphs = 0;
+      int nJsonBytes = 0;
 
       using( Transaction t = new Transaction( doc ) )
       {
@@ -118,20 +120,28 @@ namespace TraverseAllSystems
             //Process.Start( fileName );
 
             string json = tree.DumpToJson();
-            Parameter p = root.get_Parameter( def );
+
+            Debug.Assert( 2 < json.Length, 
+              "expected valid non-empty JSON graph data" );
+
+            Debug.Print( json );
+
+            Parameter p = system.get_Parameter( def );
             p.Set( json );
 
-            ++n;
+            nJsonBytes += json.Length;
+            ++nJsonGraphs;
+            ++nXmlFiles;
           }
         }
         t.Commit();
       }
 
       string main = string.Format(
-        "{0} XML files generated in {1} ({2} total"
-        + "systems, {3} desirable):",
-        n, outputFolder, nAllSystems,
-        nDesirableSystems );
+        "{0} XML files and {1} JSON graphs ({2} bytes) "
+        + "generated in {3} ({4} total systems, {5} desirable):",
+        nXmlFiles, nJsonGraphs, nJsonBytes, 
+        outputFolder, nAllSystems, nDesirableSystems );
 
       List<string> system_list = desirableSystems
         .Select<Element, string>( e =>
@@ -143,8 +153,8 @@ namespace TraverseAllSystems
       string detail = string.Join( ", ",
         system_list.ToArray<string>() );
 
-      TaskDialog dlg = new TaskDialog( n.ToString()
-        + " Systems" );
+      TaskDialog dlg = new TaskDialog( 
+        nXmlFiles.ToString() + " Systems" );
 
       dlg.MainInstruction = main;
       dlg.MainContent = detail;
