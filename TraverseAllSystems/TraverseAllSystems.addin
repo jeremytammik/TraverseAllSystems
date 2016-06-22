@@ -2,10 +2,19 @@
 <RevitAddIns>
   <AddIn Type="Command">
     <Text>Traverse MEP Systems</Text>
-    <Description>export graph structure of all MEP systems</Description>
+    <Description>Export graph structure of all MEP systems</Description>
     <Assembly>TraverseAllSystems.dll</Assembly>
     <FullClassName>TraverseAllSystems.Command</FullClassName>
     <ClientId>8354d365-d2c8-40c1-96cd-531dfdca19b1</ClientId>
+    <VendorId>com.typepad.thebuildingcoder</VendorId>
+    <VendorDescription>The Building Coder, http://thebuildingcoder.typepad.com</VendorDescription>
+  </AddIn>
+  <AddIn Type="Command">
+    <Text>Traverse MEP Systems: Creaate Shared Parameter</Text>
+    <Description>Create shared parameter to store graph structure of all MEP systems in JSON string</Description>
+    <Assembly>TraverseAllSystems.dll</Assembly>
+    <FullClassName>TraverseAllSystems.CmdCreateSharedParameters</FullClassName>
+    <ClientId>1690db5e-af29-4d4f-b25c-5a70aef4dd4a</ClientId>
     <VendorId>com.typepad.thebuildingcoder</VendorId>
     <VendorDescription>The Building Coder, http://thebuildingcoder.typepad.com</VendorDescription>
   </AddIn>

@@ -38,6 +38,8 @@ using System.Runtime.InteropServices;
 // 2016-06-21 2017.0.0.0 initial implementation based on TraverseSystem SDK sample
 // 2016-06-21 2017.0.0.1 added desired system predicate, first successful test
 // 2016-06-22 2017.0.0.2 implemented visited element dictionary to prevent infinite recursion loop
+// 2016-06-22 2017.0.0.3 implemented DumpToJson
+// 2016-06-22 2017.0.0.4 implemented shared parameter creation
 //
-[assembly: AssemblyVersion( "2017.0.0.2" )]
-[assembly: AssemblyFileVersion( "2017.0.0.2" )]
+[assembly: AssemblyVersion( "2017.0.0.4" )]
+[assembly: AssemblyFileVersion( "2017.0.0.4" )]
