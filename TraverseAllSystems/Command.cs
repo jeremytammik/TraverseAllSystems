@@ -106,7 +106,7 @@ namespace TraverseAllSystems
 
           //Process.Start( fileName );
 
-          string json = tree.DumpIntoJson();
+          string json = tree.DumpToJson();
           root.get_Parameter( shared_param_guid );
 
           ++n;

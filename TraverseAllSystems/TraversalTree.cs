@@ -40,6 +40,15 @@ namespace TraverseAllSystems
   /// </summary>
   public class TreeNode
   {
+    /// <summary>
+    /// Format a tree node to JSON, cf.
+    /// https://www.jstree.com/docs/json/
+    /// </summary>
+    const string _json_format = "["
+      + "\"id\" : {0}, "
+      + "\"parent\" : {1}, "
+      + "\"text\" : {2}]";
+
     #region Member variables
     /// <summary>
     /// Id of the element
@@ -167,9 +176,28 @@ namespace TraverseAllSystems
     }
 
     /// <summary>
-    /// Dump the node into XML file
+    /// Add JSON strings representing all children 
+    /// of this node to the given collection.
     /// </summary>
-    /// <param name="writer">XmlWriter object</param>
+    public void DumpToJson( 
+      List<string> json_collector, 
+      string parent_uid )
+    {
+      Element e = GetElementById( m_Id );
+      string uid = e.UniqueId;
+
+      string json = string.Format(
+        _json_format, uid, parent_uid, e.Name );
+
+      foreach( TreeNode node in m_childNodes )
+      {
+        node.DumpToJson( json_collector, uid );
+      }
+    }
+
+    /// <summary>
+    /// Dump the node into XML file.
+    /// </summary>
     public void DumpIntoXML( XmlWriter writer )
     {
       // Write node information
@@ -562,9 +590,11 @@ namespace TraverseAllSystems
     /// Dump the traversal graph into JSON string, cf.
     /// https://www.jstree.com/docs/json/
     /// </summary>
-    public string DumpIntoJson()
+    public string DumpToJson()
     {
-      return string.Empty;
+      List<string> a = new List<string>();
+      m_startingElementNode.DumpToJson( a, "#" );
+      return "[" + string.Join( ",", a ) + "]";
     }
     #endregion // JSON Output
 
