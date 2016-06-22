@@ -557,11 +557,21 @@ namespace TraverseAllSystems
       return m_document.GetElement( eid );
     }
 
-    #region XML Output
+    #region JSON Output
     /// <summary>
-    /// Dump the traversal into an XML file
+    /// Dump the traversal graph into JSON string.
     /// </summary>
-    /// <param name="fileName">Name of the XML file</param>
+    public string DumpIntoJson()
+    {
+      return string.Empty;
+    }
+    #endregion // JSON Output
+
+      #region XML Output
+      /// <summary>
+      /// Dump the traversal into an XML file
+      /// </summary>
+      /// <param name="fileName">Name of the XML file</param>
     public void DumpIntoXML( String fileName )
     {
       XmlWriterSettings settings = new XmlWriterSettings();
