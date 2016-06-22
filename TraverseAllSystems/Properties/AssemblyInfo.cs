@@ -32,5 +32,10 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
+//
+// History:
+//
+// 2016-06-21 2017.0.0.0 initial implementation based on TraverseSystem SDK sample
+//
 [assembly: AssemblyVersion( "2017.0.0.0" )]
 [assembly: AssemblyFileVersion( "2017.0.0.0" )]
