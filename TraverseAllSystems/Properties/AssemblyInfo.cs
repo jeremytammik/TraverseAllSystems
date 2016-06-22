@@ -40,6 +40,7 @@ using System.Runtime.InteropServices;
 // 2016-06-22 2017.0.0.2 implemented visited element dictionary to prevent infinite recursion loop
 // 2016-06-22 2017.0.0.3 implemented DumpToJson
 // 2016-06-22 2017.0.0.4 implemented shared parameter creation
+// 2016-06-22 2017.0.0.5 implemented shared parameter value population
 //
-[assembly: AssemblyVersion( "2017.0.0.4" )]
-[assembly: AssemblyFileVersion( "2017.0.0.4" )]
+[assembly: AssemblyVersion( "2017.0.0.5" )]
+[assembly: AssemblyFileVersion( "2017.0.0.5" )]

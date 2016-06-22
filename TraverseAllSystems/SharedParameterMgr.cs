@@ -13,7 +13,7 @@ namespace TraverseAllSystems
   /// Shared parameters to keep store MEP system 
   /// graph structure in JSON strings.
   /// </summary>
-  class SharedParameter
+  class SharedParameterMgr
   {
     /// <summary>
     /// Define the user visible shared parameter name.
@@ -25,58 +25,26 @@ namespace TraverseAllSystems
     /// </summary>
     Definition _shared_param_definition = null;
 
-    Document _doc = null;
-    List<ElementId> _ids = null;
-
     /// <summary>
     /// Return the parameter definition from
     /// the given element and parameter name.
     /// </summary>
-    static Definition GetDefinition(
-      Element e,
-      string parameter_name )
+    public static Definition GetDefinition( Element e )
     {
-      IList<Parameter> ps = e.GetParameters( parameter_name );
+      IList<Parameter> ps = e.GetParameters( 
+        _shared_param_name );
 
       int n = ps.Count;
 
       Debug.Assert( 1 >= n,
         "expected maximum one shared parameters "
-        + "named " + parameter_name );
+        + "named " + _shared_param_name );
 
       Definition d = ( 0 == n )
         ? null
         : ps[0].Definition;
 
       return d;
-    }
-
-    /// <summary>
-    /// Initialise the shared parameter definitions
-    /// from a given sample element.
-    /// </summary>
-    public SharedParameter( Element e )
-    {
-      _shared_param_definition = GetDefinition(
-        e, _shared_param_name );
-
-      if( IsValid )
-      {
-        _doc = e.Document;
-        _ids = new List<ElementId>();
-      }
-    }
-
-    /// <summary>
-    /// Check whether the parameter definition 
-    /// was successfully initialised.
-    /// </summary>
-    public bool IsValid
-    {
-      get
-      {
-        return null != _shared_param_definition;
-      }
     }
 
     static Definition CreateNewDefinition(

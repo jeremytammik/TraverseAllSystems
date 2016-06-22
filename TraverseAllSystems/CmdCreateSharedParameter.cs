@@ -18,7 +18,7 @@ namespace TraverseAllSystems
       UIApplication uiapp = commandData.Application;
       Document doc = uiapp.ActiveUIDocument.Document;
 
-      SharedParameter.Create( doc );
+      SharedParameterMgr.Create( doc );
 
       return Result.Succeeded;
     }

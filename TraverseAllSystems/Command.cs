@@ -1,23 +1,19 @@
 #region Namespaces
-using System.Linq;
 using System.Collections.Generic;
-//using System.Diagnostics;
+using System.Diagnostics;
+using System.IO;
+using System.Linq;
 using Autodesk.Revit.ApplicationServices;
 using Autodesk.Revit.Attributes;
 using Autodesk.Revit.DB;
-using Autodesk.Revit.UI;
-using System.Diagnostics;
-using System.IO;
-using System.Reflection;
 using Autodesk.Revit.DB.Mechanical;
 using Autodesk.Revit.DB.Plumbing;
-using System;
-//using Autodesk.Revit.UI.Selection;
+using Autodesk.Revit.UI;
 #endregion
 
 namespace TraverseAllSystems
 {
-  [Transaction( TransactionMode.ReadOnly )]
+  [Transaction( TransactionMode.Manual )]
   public class Command : IExternalCommand
   {
     /// <summary>
@@ -57,10 +53,6 @@ namespace TraverseAllSystems
       Application app = uiapp.Application;
       Document doc = uidoc.Document;
 
-      string sguid = string.Empty;
-
-      Guid shared_param_guid = new Guid( sguid );
-
       FilteredElementCollector allSystems
         = new FilteredElementCollector( doc )
           .OfClass( typeof( MEPSystem ) );
@@ -74,43 +66,65 @@ namespace TraverseAllSystems
       int nDesirableSystems = desirableSystems
         .Count<Element>();
 
+      // Check for shared parameter
+      // to store graph information.
+
+      Definition def = SharedParameterMgr.GetDefinition(
+        desirableSystems.First<MEPSystem>() );
+
+      if( null == def )
+      {
+        message = "Please initialise the MEP graph "
+          + "storage shared parameter before "
+          + "launching this command.";
+
+        return Result.Failed;
+      }
+
       string outputFolder = GetTemporaryDirectory();
 
       int n = 0;
 
-      foreach( MEPSystem system in desirableSystems )
+      using( Transaction t = new Transaction( doc ) )
       {
-        Debug.Print( system.Name );
+        t.Start( "Determine MEP Graph Structure and Store in JSON Shared Parameter" );
 
-        // Debug test -- limit to HWS systems.
-        //if( !system.Name.StartsWith( "HWS" ) ) { continue; }
-
-        FamilyInstance root = system.BaseEquipment;
-
-        // Traverse the system and dump the 
-        // traversal graph into an XML file
-
-        TraversalTree tree = new TraversalTree( system );
-
-        if( tree.Traverse() )
+        foreach( MEPSystem system in desirableSystems )
         {
-          string filename = system.Id.IntegerValue.ToString();
+          Debug.Print( system.Name );
 
-          filename = Path.ChangeExtension(
-            Path.Combine( outputFolder, filename ), "xml" );
+          // Debug test -- limit to HWS systems.
+          //if( !system.Name.StartsWith( "HWS" ) ) { continue; }
 
-          tree.DumpIntoXML( filename );
+          FamilyInstance root = system.BaseEquipment;
 
-          // Uncomment to preview the 
-          // resulting XML structure
+          // Traverse the system and dump the 
+          // traversal graph into an XML file
 
-          //Process.Start( fileName );
+          TraversalTree tree = new TraversalTree( system );
 
-          string json = tree.DumpToJson();
-          root.get_Parameter( shared_param_guid );
+          if( tree.Traverse() )
+          {
+            string filename = system.Id.IntegerValue.ToString();
 
-          ++n;
+            filename = Path.ChangeExtension(
+              Path.Combine( outputFolder, filename ), "xml" );
+
+            tree.DumpIntoXML( filename );
+
+            // Uncomment to preview the 
+            // resulting XML structure
+
+            //Process.Start( fileName );
+
+            string json = tree.DumpToJson();
+            Parameter p = root.get_Parameter( def );
+            p.Set( json );
+
+            ++n;
+          }
         }
+        t.Commit();
       }
 
       string main = string.Format(
