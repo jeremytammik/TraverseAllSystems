@@ -11,6 +11,7 @@ using System.IO;
 using System.Reflection;
 using Autodesk.Revit.DB.Mechanical;
 using Autodesk.Revit.DB.Plumbing;
+using System;
 //using Autodesk.Revit.UI.Selection;
 #endregion
 
@@ -56,6 +57,10 @@ namespace TraverseAllSystems
       Application app = uiapp.Application;
       Document doc = uidoc.Document;
 
+      string sguid = string.Empty;
+
+      Guid shared_param_guid = new Guid( sguid );
+
       FilteredElementCollector allSystems
         = new FilteredElementCollector( doc )
           .OfClass( typeof( MEPSystem ) );
@@ -100,6 +105,9 @@ namespace TraverseAllSystems
           // resulting XML structure
 
           //Process.Start( fileName );
+
+          string json = tree.DumpIntoJson();
+          root.get_Parameter( shared_param_guid );
 
           ++n;
         }

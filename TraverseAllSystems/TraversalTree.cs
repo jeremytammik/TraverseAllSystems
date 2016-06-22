@@ -1,4 +1,4 @@
-//
+#region Copyright
 // (C) Copyright 2003-2016 by Autodesk, Inc.
 //
 // Permission to use, copy, modify, and distribute this software in
@@ -18,7 +18,9 @@
 // restrictions set forth in FAR 52.227-19 (Commercial Computer
 // Software - Restricted Rights) and DFAR 252.227-7013(c)(1)(ii)
 // (Rights in Technical Data and Computer Software), as applicable.
-//
+#endregion // Copyright
+
+#region Namespaces
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -29,6 +31,7 @@ using Autodesk.Revit.DB;
 using Autodesk.Revit.DB.Mechanical;
 using Autodesk.Revit.DB.Plumbing;
 using System.Diagnostics;
+#endregion // Namespaces
 
 namespace TraverseAllSystems
 {
@@ -554,6 +557,7 @@ namespace TraverseAllSystems
       return m_document.GetElement( eid );
     }
 
+    #region XML Output
     /// <summary>
     /// Dump the traversal into an XML file
     /// </summary>
@@ -684,6 +688,7 @@ namespace TraverseAllSystems
       m_startingElementNode.DumpIntoXML( writer );
       writer.WriteEndElement();
     }
-    #endregion
+    #endregion // XML Output
+    #endregion // Methods
   }
 }
