@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<RevitAddIns>
+  <AddIn Type="Command">
+    <Text>Traverse MEP Systems</Text>
+    <Description>export graph structure of all MEP systems</Description>
+    <Assembly>TraverseAllSystems.dll</Assembly>
+    <FullClassName>TraverseAllSystems.Command</FullClassName>
+    <ClientId>8354d365-d2c8-40c1-96cd-531dfdca19b1</ClientId>
+    <VendorId>com.typepad.thebuildingcoder</VendorId>
+    <VendorDescription>The Building Coder, http://thebuildingcoder.typepad.com</VendorDescription>
+  </AddIn>
+</RevitAddIns>
