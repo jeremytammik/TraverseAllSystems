@@ -4,7 +4,7 @@ C# .NET Revit API add-in to extract graph structure of all MEP systems.
 
 For more information, please refer
 to [The Building Coder](http://thebuildingcoder.typepad.com) discussion
-on [](http://thebuildingcoder.typepad.com/blog/2016/06/traversing-and-exporting-all-mep-system-graphs.html).
+on [traversing and exporting all MEP system graphs](http://thebuildingcoder.typepad.com/blog/2016/06/traversing-and-exporting-all-mep-system-graphs.html).
 
 
 ## Author
