@@ -36,6 +36,7 @@ using System.Runtime.InteropServices;
 // History:
 //
 // 2016-06-21 2017.0.0.0 initial implementation based on TraverseSystem SDK sample
+// 2016-06-21 2017.0.0.1 added desired system predicate, first successful test
 //
-[assembly: AssemblyVersion( "2017.0.0.0" )]
-[assembly: AssemblyFileVersion( "2017.0.0.0" )]
+[assembly: AssemblyVersion( "2017.0.0.1" )]
+[assembly: AssemblyFileVersion( "2017.0.0.1" )]
