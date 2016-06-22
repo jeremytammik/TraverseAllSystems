@@ -559,7 +559,8 @@ namespace TraverseAllSystems
 
     #region JSON Output
     /// <summary>
-    /// Dump the traversal graph into JSON string.
+    /// Dump the traversal graph into JSON string, cf.
+    /// https://www.jstree.com/docs/json/
     /// </summary>
     public string DumpIntoJson()
     {
