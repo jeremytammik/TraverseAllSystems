@@ -44,6 +44,8 @@ using System.Runtime.InteropServices;
 // 2016-06-22 2017.0.0.5 tested and verified graph structure json is written out
 // 2016-06-22 2017.0.0.6 renamed json text field to name
 // 2016-06-23 2017.0.0.7 implemented storage of top-down system graph in json
+// 2016-06-23 2017.0.0.8 cleaned up for publication
+// 2016-06-23 2017.0.0.8 automatically create shared parameter if needed, eliminated separate command
 //
-[assembly: AssemblyVersion( "2017.0.0.7" )]
-[assembly: AssemblyFileVersion( "2017.0.0.7" )]
+[assembly: AssemblyVersion( "2017.0.0.8" )]
+[assembly: AssemblyFileVersion( "2017.0.0.8" )]

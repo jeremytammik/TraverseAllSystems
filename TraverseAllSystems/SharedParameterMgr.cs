@@ -21,11 +21,6 @@ namespace TraverseAllSystems
     const string _shared_param_name = "MepSystemGraphJson";
 
     /// <summary>
-    /// Shared parameter definitions.
-    /// </summary>
-    Definition _shared_param_definition = null;
-
-    /// <summary>
     /// Return the parameter definition from
     /// the given element and parameter name.
     /// </summary>
@@ -47,6 +42,10 @@ namespace TraverseAllSystems
       return d;
     }
 
+    /// <summary>
+    /// Create a new shared parameter definition 
+    /// in the specified grpup.
+    /// </summary>
     static Definition CreateNewDefinition(
       DefinitionGroup group,
       string parameter_name,
@@ -58,8 +57,7 @@ namespace TraverseAllSystems
     }
 
     /// <summary>
-    /// Create the shared parameters to keep track
-    /// of the CNC fabrication export history.
+    /// Create the shared parameter.
     /// </summary>
     public static void Create( Document doc )
     {

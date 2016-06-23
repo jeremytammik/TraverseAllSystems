@@ -9,6 +9,7 @@
     <VendorId>com.typepad.thebuildingcoder</VendorId>
     <VendorDescription>The Building Coder, http://thebuildingcoder.typepad.com</VendorDescription>
   </AddIn>
+  <!---
   <AddIn Type="Command">
     <Text>Traverse MEP Systems: Creaate Shared Parameter</Text>
     <Description>Create shared parameter to store graph structure of all MEP systems in JSON string</Description>
@@ -18,4 +19,5 @@
     <VendorId>com.typepad.thebuildingcoder</VendorId>
     <VendorDescription>The Building Coder, http://thebuildingcoder.typepad.com</VendorDescription>
   </AddIn>
+  -->
 </RevitAddIns>

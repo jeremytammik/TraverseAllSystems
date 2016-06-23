@@ -74,11 +74,24 @@ namespace TraverseAllSystems
 
       if( null == def )
       {
-        message = "Please initialise the MEP graph "
-          + "storage shared parameter before "
-          + "launching this command.";
+        //message = "Please initialise the MEP graph "
+        //  + "storage shared parameter before "
+        //  + "launching this command.";
 
-        return Result.Failed;
+        //return Result.Failed;
+
+        SharedParameterMgr.Create( doc );
+
+        def = SharedParameterMgr.GetDefinition(
+          desirableSystems.First<MEPSystem>() );
+
+        if( null == def )
+        {
+          message = "Error creating the "
+            + "storage shared parameter.";
+
+          return Result.Failed;
+        }
       }
 
       string outputFolder = GetTemporaryDirectory();
