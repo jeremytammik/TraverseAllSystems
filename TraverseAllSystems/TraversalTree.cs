@@ -32,7 +32,7 @@ using Autodesk.Revit.DB.Plumbing;
 namespace TraverseAllSystems
 {
   /// <summary>
-  /// A TreeNode object represents an element in the system
+  /// TreeNode object representing a system element
   /// </summary>
   public class TreeNode
   {
@@ -45,8 +45,8 @@ namespace TraverseAllSystems
     const string _json_format_to_store_parent_in_child
       = "{{"
       + "\"id\" : {0}, "
-      + "\"parent\" : {1}, "
-      + "\"name\" : {2}}}";
+      + "\"name\" : {1}, "
+      + "\"parent\" : {2}}}";
 
     /// <summary>
     /// Format a tree node to JSON storing a 
@@ -57,8 +57,8 @@ namespace TraverseAllSystems
     const string _json_format_to_store_children_in_parent
       = "{{"
       + "\"id\" : {0}, "
-      + "\"children\" : {1}, "
-      + "\"name\" : {2}}}";
+      + "\"name\" : {1}, "
+      + "\"children\" : [{2}]}}";
     #endregion // JSON Output Format Strings
 
     #region Member variables
@@ -223,12 +223,11 @@ namespace TraverseAllSystems
     }
 
     /// <summary>
-    /// Add JSON strings representing all children 
-    /// of this node to the given collection.
+    /// Return a JSON string representing this node and
+    /// including the recursive hierarchical graph of 
+    /// all its all children.
     /// </summary>
-    public void DumpToJsonTopDown( 
-      List<string> json_collector, 
-      string parent_id )
+    public string DumpToJsonTopDown()
     {
       Element e = GetElementById( m_Id );
 
@@ -236,16 +235,20 @@ namespace TraverseAllSystems
         ? e.UniqueId
         : m_Id.IntegerValue.ToString();
 
-      string json = string.Format(
-        _json_format_to_store_parent_in_child,
-        id, e.Name, parent_id );
+      List<string> json_collector = new List<string>();
 
-      json_collector.Add( json );
-
-      foreach( TreeNode node in m_childNodes )
+      foreach( TreeNode child in m_childNodes )
       {
-        node.DumpToJsonBottomUp( json_collector, id );
+        json_collector.Add( child.DumpToJsonTopDown() );
       }
+
+      string json_kids = string.Join( ",", json_collector );
+
+      string json = string.Format(
+        _json_format_to_store_children_in_parent,
+        id, e.Name, json_kids );
+
+      return json;
     }
     #endregion // JSON Output
 
@@ -317,7 +320,7 @@ namespace TraverseAllSystems
   }
 
   /// <summary>
-  /// Data structure of the traversal
+  /// Data structure of the system traversal
   /// </summary>
   public class TraversalTree
   {
@@ -664,9 +667,8 @@ namespace TraverseAllSystems
     /// </summary>
     public string DumpToJsonTopDown()
     {
-      List<string> a = new List<string>();
-      m_startingElementNode.DumpToJsonTopDown( a, "#" );
-      return "[" + string.Join( ",", a ) + "]";
+      return m_startingElementNode
+        .DumpToJsonTopDown();
     }
 
     /// <summary>
