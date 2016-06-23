@@ -12,8 +12,8 @@
     /// Store parent node id in child, or recursive 
     /// tree of children in parent?
     /// </summary>
-    public const bool StoreParentInChildNode = false;
-    public const bool StoreChildrenInParentNode 
-      = !StoreParentInChildNode;
+    public const bool StoreJsonGraphBottomUp = false;
+    public const bool StoreJsonGraphTopDown 
+      = !StoreJsonGraphBottomUp;
   }
 }

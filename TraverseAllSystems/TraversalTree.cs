@@ -23,14 +23,10 @@
 #region Namespaces
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Xml;
-
-using Autodesk.Revit;
 using Autodesk.Revit.DB;
 using Autodesk.Revit.DB.Mechanical;
 using Autodesk.Revit.DB.Plumbing;
-using System.Diagnostics;
 #endregion // Namespaces
 
 namespace TraverseAllSystems
@@ -40,8 +36,10 @@ namespace TraverseAllSystems
   /// </summary>
   public class TreeNode
   {
+    #region JSON Output Format Strings
     /// <summary>
-    /// Format a tree node to JSON, cf.
+    /// Format a tree node to JSON storing parent id 
+    /// in child node for bottom-up structure, cf.
     /// https://www.jstree.com/docs/json
     /// </summary>
     const string _json_format_to_store_parent_in_child
@@ -50,17 +48,25 @@ namespace TraverseAllSystems
       + "\"parent\" : {1}, "
       + "\"name\" : {2}}}";
 
+    /// <summary>
+    /// Format a tree node to JSON storing a 
+    /// hierarchical tree of children ids in parent 
+    /// for top-down structure, cf.
+    /// https://www.jstree.com/docs/json
+    /// </summary>
     const string _json_format_to_store_children_in_parent
       = "{{"
       + "\"id\" : {0}, "
       + "\"children\" : {1}, "
       + "\"name\" : {2}}}";
+    #endregion // JSON Output Format Strings
 
     #region Member variables
     /// <summary>
     /// Id of the element
     /// </summary>
     private Autodesk.Revit.DB.ElementId m_Id;
+
     /// <summary>
     /// Flow direction of the node
     /// For the starting element of the traversal, the direction will be the same as the connector
@@ -68,18 +74,22 @@ namespace TraverseAllSystems
     /// its previous element
     /// </summary>
     private FlowDirectionType m_direction;
+
     /// <summary>
     /// The parent node of the current node.
     /// </summary>
     private TreeNode m_parent;
+
     /// <summary>
     /// The connector of the previous element to which current element is connected
     /// </summary>
     private Connector m_inputConnector;
+
     /// <summary>
     /// The first-level child nodes of the current node
     /// </summary>
     private List<TreeNode> m_childNodes;
+
     /// <summary>
     /// Active document of Revit
     /// </summary>
@@ -90,7 +100,7 @@ namespace TraverseAllSystems
     /// <summary>
     /// Id of the element
     /// </summary>
-    public Autodesk.Revit.DB.ElementId Id
+    public ElementId Id
     {
       get
       {
@@ -159,34 +169,38 @@ namespace TraverseAllSystems
     }
     #endregion
 
-    #region Methods
+    #region Constructor
     /// <summary>
     /// Constructor
     /// </summary>
     /// <param name="doc">Revit document</param>
     /// <param name="id">Element's Id</param>
-    public TreeNode( Document doc, Autodesk.Revit.DB.ElementId id )
+    public TreeNode( Document doc, ElementId id )
     {
       m_document = doc;
       m_Id = id;
       m_childNodes = new List<TreeNode>();
     }
+    #endregion // Constructor
 
+    #region GetElementById
     /// <summary>
     /// Get Element by its Id
     /// </summary>
     /// <param name="eid">Element's Id</param>
     /// <returns>Element</returns>
-    private Element GetElementById( Autodesk.Revit.DB.ElementId eid )
+    private Element GetElementById( ElementId eid )
     {
       return m_document.GetElement( eid );
     }
+    #endregion // GetElementById
 
+    #region JSON Output
     /// <summary>
     /// Add JSON strings representing all children 
     /// of this node to the given collection.
     /// </summary>
-    public void DumpToJsonParentInChild(
+    public void DumpToJsonBottomUp(
       List<string> json_collector,
       string parent_id )
     {
@@ -204,7 +218,7 @@ namespace TraverseAllSystems
 
       foreach( TreeNode node in m_childNodes )
       {
-        node.DumpToJsonParentInChild( json_collector, id );
+        node.DumpToJsonBottomUp( json_collector, id );
       }
     }
 
@@ -212,7 +226,7 @@ namespace TraverseAllSystems
     /// Add JSON strings representing all children 
     /// of this node to the given collection.
     /// </summary>
-    public void DumpToJsonChildrenInParent( 
+    public void DumpToJsonTopDown( 
       List<string> json_collector, 
       string parent_id )
     {
@@ -230,10 +244,12 @@ namespace TraverseAllSystems
 
       foreach( TreeNode node in m_childNodes )
       {
-        node.DumpToJsonParentInChild( json_collector, id );
+        node.DumpToJsonBottomUp( json_collector, id );
       }
     }
+    #endregion // JSON Output
 
+    #region XML Output
     /// <summary>
     /// Dump the node into XML file.
     /// </summary>
@@ -297,7 +313,7 @@ namespace TraverseAllSystems
         }
       }
     }
-    #endregion
+    #endregion // XML Output
   }
 
   /// <summary>
@@ -306,13 +322,24 @@ namespace TraverseAllSystems
   public class TraversalTree
   {
     #region Member variables
-    // Active document of Revit
+    /// <summary>
+    /// Active Revit document
+    /// </summary>
     private Document m_document;
-    // The MEP system of the traversal
+
+    /// <summary>
+    /// The MEP system of the traversal
+    /// </summary>
     private MEPSystem m_system;
-    // The flag whether the MEP system of the traversal is a mechanical system or piping system
+
+    /// <summary>
+    /// Flag whether the MEP system is mechanical or piping
+    /// </summary>
     private Boolean m_isMechanicalSystem;
-    // The starting element node
+
+    /// <summary>
+    /// The starting element node
+    /// </summary>
     private TreeNode m_startingElementNode;
 
     /// <summary>
@@ -322,7 +349,7 @@ namespace TraverseAllSystems
     Dictionary<int, int> _visitedElementCount;
     #endregion
 
-    #region Methods
+    #region Constructor
     /// <summary>
     /// Constructor
     /// </summary>
@@ -335,7 +362,9 @@ namespace TraverseAllSystems
       m_isMechanicalSystem = ( system is MechanicalSystem );
       _visitedElementCount = new Dictionary<int, int>();
     }
+    #endregion // Constructor
 
+    #region Tree Construction
     /// <summary>
     /// Traverse the system
     /// </summary>
@@ -620,40 +649,45 @@ namespace TraverseAllSystems
     /// <summary>
     /// Get element by its id
     /// </summary>
-    private Element GetElementById( Autodesk.Revit.DB.ElementId eid )
+    private Element GetElementById( ElementId eid )
     {
       return m_document.GetElement( eid );
     }
+    #endregion // Tree Construction
 
     #region JSON Output
     /// <summary>
-    /// Dump the traversal graph into JSON string, cf.
-    /// https://www.jstree.com/docs/json/
+    /// Dump the top-down traversal graph into JSON.
+    /// In this casse, each parent node is populated
+    /// with a full hierarchical graph of all its
+    /// children, cf. https://www.jstree.com/docs/json.
     /// </summary>
-    public string DumpToJsonChildrenInParent()
+    public string DumpToJsonTopDown()
     {
       List<string> a = new List<string>();
-      m_startingElementNode.DumpToJsonChildrenInParent( a, "#" );
+      m_startingElementNode.DumpToJsonTopDown( a, "#" );
       return "[" + string.Join( ",", a ) + "]";
     }
 
     /// <summary>
-    /// Dump the traversal graph into JSON string, cf.
+    /// Dump the bottom-up traversal graph into JSON.
+    /// In this casse, each child node is equipped with 
+    /// a 'parent' pointer, cf.
     /// https://www.jstree.com/docs/json/
     /// </summary>
-    public string DumpToJsonParentInChild()
+    public string DumpToJsonBottomUp()
     {
       List<string> a = new List<string>();
-      m_startingElementNode.DumpToJsonParentInChild( a, "#" );
+      m_startingElementNode.DumpToJsonBottomUp( a, "#" );
       return "[" + string.Join( ",", a ) + "]";
     }
     #endregion // JSON Output
 
-      #region XML Output
-      /// <summary>
-      /// Dump the traversal into an XML file
-      /// </summary>
-      /// <param name="fileName">Name of the XML file</param>
+    #region XML Output
+    /// <summary>
+    /// Dump the traversal into an XML file
+    /// </summary>
+    /// <param name="fileName">Name of the XML file</param>
     public void DumpIntoXML( String fileName )
     {
       XmlWriterSettings settings = new XmlWriterSettings();
@@ -781,6 +815,5 @@ namespace TraverseAllSystems
       writer.WriteEndElement();
     }
     #endregion // XML Output
-    #endregion // Methods
   }
 }
