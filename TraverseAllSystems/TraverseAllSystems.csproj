@@ -53,6 +53,7 @@
   <ItemGroup>
     <Compile Include="CmdCreateSharedParameter.cs" />
     <Compile Include="Command.cs" />
+    <Compile Include="Options.cs" />
     <Compile Include="SharedParameterMgr.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TraversalTree.cs" />
