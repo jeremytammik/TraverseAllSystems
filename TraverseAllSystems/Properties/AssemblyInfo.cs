@@ -42,6 +42,7 @@ using System.Runtime.InteropServices;
 // 2016-06-22 2017.0.0.4 implemented shared parameter creation
 // 2016-06-22 2017.0.0.5 implemented shared parameter value population
 // 2016-06-22 2017.0.0.5 tested and verified graph structure json is written out
+// 2016-06-22 2017.0.0.6 renamed json text field to name
 //
-[assembly: AssemblyVersion( "2017.0.0.5" )]
-[assembly: AssemblyFileVersion( "2017.0.0.5" )]
+[assembly: AssemblyVersion( "2017.0.0.6" )]
+[assembly: AssemblyFileVersion( "2017.0.0.6" )]
