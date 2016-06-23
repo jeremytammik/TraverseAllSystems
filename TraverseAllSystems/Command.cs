@@ -119,7 +119,9 @@ namespace TraverseAllSystems
 
             //Process.Start( fileName );
 
-            string json = tree.DumpToJson();
+            string json = Options.StoreParentInChildNode
+              ? tree.DumpToJsonParentInChild()
+              : tree.DumpToJsonChildrenInParent();
 
             Debug.Assert( 2 < json.Length, 
               "expected valid non-empty JSON graph data" );

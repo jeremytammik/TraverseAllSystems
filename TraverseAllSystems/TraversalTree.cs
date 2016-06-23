@@ -42,11 +42,18 @@ namespace TraverseAllSystems
   {
     /// <summary>
     /// Format a tree node to JSON, cf.
-    /// https://www.jstree.com/docs/json/
+    /// https://www.jstree.com/docs/json
     /// </summary>
-    const string _json_format = "{{"
+    const string _json_format_to_store_parent_in_child
+      = "{{"
       + "\"id\" : {0}, "
       + "\"parent\" : {1}, "
+      + "\"name\" : {2}}}";
+
+    const string _json_format_to_store_children_in_parent
+      = "{{"
+      + "\"id\" : {0}, "
+      + "\"children\" : {1}, "
       + "\"name\" : {2}}}";
 
     #region Member variables
@@ -179,21 +186,51 @@ namespace TraverseAllSystems
     /// Add JSON strings representing all children 
     /// of this node to the given collection.
     /// </summary>
-    public void DumpToJson( 
-      List<string> json_collector, 
-      string parent_uid )
+    public void DumpToJsonParentInChild(
+      List<string> json_collector,
+      string parent_id )
     {
       Element e = GetElementById( m_Id );
-      string uid = e.UniqueId;
+
+      string id = Options.StoreUniqueId
+        ? e.UniqueId
+        : m_Id.IntegerValue.ToString();
 
       string json = string.Format(
-        _json_format, uid, parent_uid, e.Name );
+        _json_format_to_store_parent_in_child,
+        id, e.Name, parent_id );
 
       json_collector.Add( json );
 
       foreach( TreeNode node in m_childNodes )
       {
-        node.DumpToJson( json_collector, uid );
+        node.DumpToJsonParentInChild( json_collector, id );
+      }
+    }
+
+    /// <summary>
+    /// Add JSON strings representing all children 
+    /// of this node to the given collection.
+    /// </summary>
+    public void DumpToJsonChildrenInParent( 
+      List<string> json_collector, 
+      string parent_id )
+    {
+      Element e = GetElementById( m_Id );
+
+      string id = Options.StoreUniqueId
+        ? e.UniqueId
+        : m_Id.IntegerValue.ToString();
+
+      string json = string.Format(
+        _json_format_to_store_parent_in_child,
+        id, e.Name, parent_id );
+
+      json_collector.Add( json );
+
+      foreach( TreeNode node in m_childNodes )
+      {
+        node.DumpToJsonParentInChild( json_collector, id );
       }
     }
 
@@ -593,10 +630,21 @@ namespace TraverseAllSystems
     /// Dump the traversal graph into JSON string, cf.
     /// https://www.jstree.com/docs/json/
     /// </summary>
-    public string DumpToJson()
+    public string DumpToJsonChildrenInParent()
     {
       List<string> a = new List<string>();
-      m_startingElementNode.DumpToJson( a, "#" );
+      m_startingElementNode.DumpToJsonChildrenInParent( a, "#" );
+      return "[" + string.Join( ",", a ) + "]";
+    }
+
+    /// <summary>
+    /// Dump the traversal graph into JSON string, cf.
+    /// https://www.jstree.com/docs/json/
+    /// </summary>
+    public string DumpToJsonParentInChild()
+    {
+      List<string> a = new List<string>();
+      m_startingElementNode.DumpToJsonParentInChild( a, "#" );
       return "[" + string.Join( ",", a ) + "]";
     }
     #endregion // JSON Output
