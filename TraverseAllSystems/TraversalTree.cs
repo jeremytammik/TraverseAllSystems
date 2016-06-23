@@ -44,10 +44,10 @@ namespace TraverseAllSystems
     /// Format a tree node to JSON, cf.
     /// https://www.jstree.com/docs/json/
     /// </summary>
-    const string _json_format = "{"
+    const string _json_format = "{{"
       + "\"id\" : {0}, "
       + "\"parent\" : {1}, "
-      + "\"name\" : {2}}";
+      + "\"name\" : {2}}}";
 
     #region Member variables
     /// <summary>
