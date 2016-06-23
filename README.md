@@ -6,8 +6,25 @@ For more information, please refer
 to [The Building Coder](http://thebuildingcoder.typepad.com) discussion
 on [traversing and exporting all MEP system graphs](http://thebuildingcoder.typepad.com/blog/2016/06/traversing-and-exporting-all-mep-system-graphs.html).
 
+## Options
 
-## JSON Structure
+- Use element id or UniqueId for to identify node
+- Store JSON graph bottom-up or top-down
+
+The two bottom-up and top-down JSON storage structures both comply with
+the [jsTree JSON spec](https://www.jstree.com/docs/json).
+
+### Bottom-Up JSON Structure
+
+```
+[
+  { "id" : "ajson1", "parent" : "#", "text" : "Simple root node" },
+  { "id" : "ajson2", "parent" : "#", "text" : "Root node 2" },
+  { "id" : "ajson3", "parent" : "ajson2", "text" : "Child 1" },
+  { "id" : "ajson4", "parent" : "ajson2", "text" : "Child 2" },
+]```
+
+### Top-Down JSON Structure
 
 ```
 {
