@@ -111,15 +111,25 @@ namespace TraverseAllSystems
 
         CategorySet catSet = app.Create.NewCategorySet();
 
-        Category cat = doc.Settings.Categories.get_Item(
-          BuiltInCategory.OST_DuctSystem );
+        if( Options.StoreEntireJsonGraphOnProjectInfo )
+        {
+          Category cat = doc.Settings.Categories.get_Item(
+            BuiltInCategory.OST_ProjectInformation );
 
-        catSet.Insert( cat );
+          catSet.Insert( cat );
+        }
+        else
+        {
+          Category cat = doc.Settings.Categories.get_Item(
+            BuiltInCategory.OST_DuctSystem );
 
-        cat = doc.Settings.Categories.get_Item(
-          BuiltInCategory.OST_PipingSystem );
+          catSet.Insert( cat );
 
-        catSet.Insert( cat );
+          cat = doc.Settings.Categories.get_Item(
+            BuiltInCategory.OST_PipingSystem );
+
+          catSet.Insert( cat );
+        }
 
         Binding binding = app.Create.NewInstanceBinding(
           catSet );

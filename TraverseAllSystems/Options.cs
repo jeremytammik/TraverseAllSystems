@@ -15,5 +15,15 @@
     public static bool StoreJsonGraphBottomUp = false;
     public static bool StoreJsonGraphTopDown
       = !StoreJsonGraphBottomUp;
+
+    /// <summary>
+    /// Store entire JSON graph for all systems on 
+    /// project info element, or individual graph for 
+    /// each system seaparately in MEP system element?
+    /// </summary>
+    public static bool StoreEntireJsonGraphOnProjectInfo = true;
+    public static bool StoreSeparateJsonGraphOnEachSystem 
+      = !StoreEntireJsonGraphOnProjectInfo;
+
   }
 }

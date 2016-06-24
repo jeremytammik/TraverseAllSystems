@@ -50,6 +50,8 @@ using System.Runtime.InteropServices;
 // 2016-06-23 2017.0.0.10 implemented jstree test file and verified proper tree population
 // 2016-06-23 2017.0.0.11 implemented test page, gh-pages, test link, separate test treedata.json, master and gh-pages syncing
 // 2016-06-24 2017.0.0.12 added json sample data from rme_advanced_sample_model
+// 2016-06-24 2017.0.0.13 removed duplicate root id -1
+// 2016-06-24 2017.0.0.14 store entire json graph for all systems on project info instead of separate subgraph on each individual system
 //
-[assembly: AssemblyVersion( "2017.0.0.12" )]
-[assembly: AssemblyFileVersion( "2017.0.0.12" )]
+[assembly: AssemblyVersion( "2017.0.0.14" )]
+[assembly: AssemblyFileVersion( "2017.0.0.14" )]

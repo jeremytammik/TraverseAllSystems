@@ -148,8 +148,11 @@ namespace TraverseAllSystems
 
             json_collector.Add( json );
 
-            Parameter p = system.get_Parameter( def );
-            p.Set( json );
+            if( Options.StoreSeparateJsonGraphOnEachSystem )
+            {
+              Parameter p = system.get_Parameter( def );
+              p.Set( json );
+            }
 
             nJsonBytes += json.Length;
             ++nJsonGraphs;
@@ -196,6 +199,17 @@ namespace TraverseAllSystems
         -1, doc.Title, json_systems );
 
       Debug.Print( json );
+
+      if( Options.StoreEntireJsonGraphOnProjectInfo )
+      {
+        Element project_info 
+          = new FilteredElementCollector( doc )
+            .OfClass( typeof( ProjectInfo ) )
+            .FirstElement();
+
+        Parameter p = project_info.get_Parameter( def );
+        p.Set( json );
+      }
 
       return Result.Succeeded;
     }
