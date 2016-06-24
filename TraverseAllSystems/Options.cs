@@ -5,11 +5,11 @@
     /// <summary>
     /// Store element id or UniqueId in JSON output?
     /// </summary>
-    public static bool StoreUniqueId = false;
+    public static bool StoreUniqueId = true;
     public static bool StoreElementId = !StoreUniqueId;
 
     /// <summary>
-    /// Store parent node id in child, or recursive 
+    /// Store parent node id in child, or recursive
     /// tree of children in parent?
     /// </summary>
     public static bool StoreJsonGraphBottomUp = false;
@@ -17,12 +17,12 @@
       = !StoreJsonGraphBottomUp;
 
     /// <summary>
-    /// Store entire JSON graph for all systems on 
-    /// project info element, or individual graph for 
+    /// Store entire JSON graph for all systems on
+    /// project info element, or individual graph for
     /// each system seaparately in MEP system element?
     /// </summary>
     public static bool StoreEntireJsonGraphOnProjectInfo = true;
-    public static bool StoreSeparateJsonGraphOnEachSystem 
+    public static bool StoreSeparateJsonGraphOnEachSystem
       = !StoreEntireJsonGraphOnProjectInfo;
 
   }
