@@ -39,25 +39,23 @@ namespace TraverseAllSystems
     #region JSON Output Format Strings
     /// <summary>
     /// Format a tree node to JSON storing parent id 
-    /// in child node for bottom-up structure, cf.
-    /// https://www.jstree.com/docs/json
+    /// in child node for bottom-up structure.
     /// </summary>
     const string _json_format_to_store_parent_in_child
       = "{{"
       + "\"id\" : {0}, "
-      + "\"name\" : {1}, "
+      + "\"name\" : \"{1}\", "
       + "\"parent\" : {2}}}";
 
     /// <summary>
     /// Format a tree node to JSON storing a 
     /// hierarchical tree of children ids in parent 
-    /// for top-down structure, cf.
-    /// https://www.jstree.com/docs/json
+    /// for top-down structure.
     /// </summary>
     const string _json_format_to_store_children_in_parent
       = "{{"
       + "\"id\" : {0}, "
-      + "\"name\" : {1}, "
+      + "\"name\" : \"{1}\", "
       + "\"children\" : [{2}]}}";
     #endregion // JSON Output Format Strings
 
@@ -207,7 +205,7 @@ namespace TraverseAllSystems
       Element e = GetElementById( m_Id );
 
       string id = Options.StoreUniqueId
-        ? e.UniqueId
+        ? "\"" + e.UniqueId + "\""
         : m_Id.IntegerValue.ToString();
 
       string json = string.Format(
@@ -411,8 +409,8 @@ namespace TraverseAllSystems
         }
       }
 
-      if(null != startingElementNode )
-      { 
+      if( null != startingElementNode )
+      {
         startingElementNode.Parent = null;
         startingElementNode.InputConnector = null;
       }
@@ -440,7 +438,7 @@ namespace TraverseAllSystems
       // Get the open connector recursively
       Connector openConnector = GetOpenConnector( element, null );
 
-      return null != openConnector 
+      return null != openConnector
         ? openConnector.Owner
         : null;
     }

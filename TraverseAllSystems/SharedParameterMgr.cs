@@ -26,7 +26,7 @@ namespace TraverseAllSystems
     /// </summary>
     public static Definition GetDefinition( Element e )
     {
-      IList<Parameter> ps = e.GetParameters( 
+      IList<Parameter> ps = e.GetParameters(
         _shared_param_name );
 
       int n = ps.Count;
@@ -69,7 +69,7 @@ namespace TraverseAllSystems
       const string _shared_parameters_filename
         = "shared_parameters.txt";
 
-      const string _definition_group_name 
+      const string _definition_group_name
         = "TraverseAllSystems";
 
       Application app = doc.Application;
@@ -137,7 +137,7 @@ namespace TraverseAllSystems
 
         Definition definition
           = group.Definitions.get_Item( _shared_param_name )
-            ?? CreateNewDefinition( group, 
+            ?? CreateNewDefinition( group,
               _shared_param_name, ParameterType.Text );
 
         doc.ParameterBindings.Insert( definition, binding,

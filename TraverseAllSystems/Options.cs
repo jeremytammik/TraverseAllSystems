@@ -13,7 +13,7 @@
     /// tree of children in parent?
     /// </summary>
     public static bool StoreJsonGraphBottomUp = false;
-    public static bool StoreJsonGraphTopDown 
+    public static bool StoreJsonGraphTopDown
       = !StoreJsonGraphBottomUp;
   }
 }
