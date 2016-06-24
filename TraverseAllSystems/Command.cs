@@ -237,7 +237,7 @@ namespace TraverseAllSystems
       const string _json_format_to_store_systems_in_root
         = "{{"
         + "\"id\" : {0}, "
-        + "\"text\" : \"{1}\", "
+        + "\"name\" : \"{1}\", "
         + "\"children\" : [{2}]}}";
 
       json = string.Format(
