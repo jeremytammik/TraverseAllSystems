@@ -664,7 +664,7 @@ namespace TraverseAllSystems
     #region JSON Output
     /// <summary>
     /// Dump the top-down traversal graph into JSON.
-    /// In this casse, each parent node is populated
+    /// In this case, each parent node is populated
     /// with a full hierarchical graph of all its
     /// children, cf. https://www.jstree.com/docs/json.
     /// </summary>
@@ -676,7 +676,7 @@ namespace TraverseAllSystems
 
     /// <summary>
     /// Dump the bottom-up traversal graph into JSON.
-    /// In this casse, each child node is equipped with 
+    /// In this case, each child node is equipped with 
     /// a 'parent' pointer, cf.
     /// https://www.jstree.com/docs/json/
     /// </summary>
