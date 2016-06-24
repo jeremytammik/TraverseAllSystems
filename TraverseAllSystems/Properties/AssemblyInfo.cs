@@ -48,6 +48,7 @@ using System.Runtime.InteropServices;
 // 2016-06-23 2017.0.0.8 wrap json strings in double quotes and validated json output
 // 2016-06-23 2017.0.0.9 cleaned up for publication
 // 2016-06-23 2017.0.0.10 implemented jstree test file and verified proper tree population
+// 2016-06-23 2017.0.0.11 implemented test page, gh-pages, test link, separate test treedata.json, master and gh-pages syncing
 //
-[assembly: AssemblyVersion( "2017.0.0.10" )]
-[assembly: AssemblyFileVersion( "2017.0.0.10" )]
+[assembly: AssemblyVersion( "2017.0.0.11" )]
+[assembly: AssemblyFileVersion( "2017.0.0.11" )]
