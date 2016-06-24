@@ -54,8 +54,8 @@ namespace TraverseAllSystems
     /// </summary>
     const string _json_format_to_store_children_in_parent
       = "{{"
-      + "\"id\" : {0}, "
-      + "\"name\" : \"{1}\", "
+      + "\"id\" : \"{0}\", "
+      + "\"text\" : \"{1}\", "
       + "\"children\" : [{2}]}}";
     #endregion // JSON Output Format Strings
 
@@ -202,7 +202,7 @@ namespace TraverseAllSystems
     static string GetId( Element e )
     {
       return Options.StoreUniqueId
-        ? "\"" + e.UniqueId + "\""
+        ? e.UniqueId
         : e.Id.IntegerValue.ToString();
     }
 

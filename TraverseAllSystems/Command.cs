@@ -96,9 +96,14 @@ namespace TraverseAllSystems
 
       string outputFolder = GetTemporaryDirectory();
 
+      string json;
       int nXmlFiles = 0;
       int nJsonGraphs = 0;
       int nJsonBytes = 0;
+
+      // Collect one JSON string per system.
+
+      List<string> json_collector = new List<string>();
 
       using( Transaction t = new Transaction( doc ) )
       {
@@ -132,7 +137,7 @@ namespace TraverseAllSystems
 
             //Process.Start( fileName );
 
-            string json = Options.StoreJsonGraphBottomUp
+            json = Options.StoreJsonGraphBottomUp
               ? tree.DumpToJsonBottomUp()
               : tree.DumpToJsonTopDown();
 
@@ -140,6 +145,8 @@ namespace TraverseAllSystems
               "expected valid non-empty JSON graph data" );
 
             Debug.Print( json );
+
+            json_collector.Add( json );
 
             Parameter p = system.get_Parameter( def );
             p.Set( json );
@@ -175,6 +182,20 @@ namespace TraverseAllSystems
       dlg.MainContent = detail;
 
       dlg.Show();
+
+      string json_systems = string.Join( ",", json_collector );
+
+      const string _json_format_to_store_systrms_in_root
+        = "{{"
+        + "\"id\" : {0}, "
+        + "\"text\" : \"{1}\", "
+        + "\"children\" : [{2}]}}";
+
+      json = string.Format(
+        _json_format_to_store_systrms_in_root,
+        -1, doc.Title, json_systems );
+
+      Debug.Print( json );
 
       return Result.Succeeded;
     }
