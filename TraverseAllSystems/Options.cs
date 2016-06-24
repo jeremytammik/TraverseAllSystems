@@ -16,6 +16,5 @@
         public static bool StoreJsonGraphTopDown
           = !StoreJsonGraphBottomUp;
 
-        public const string USC_FORGE_JSON_TREE_FORMAT = "{\"id\" : \"{0}\" , \"name\" : \"{1}\", \"udids\" : [ {2} ], \"children\" : [ ]}";
     }
 }
