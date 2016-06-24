@@ -198,14 +198,14 @@ namespace TraverseAllSystems
 
       string json_systems = string.Join( ",", json_collector );
 
-      const string _json_format_to_store_systrms_in_root
+      const string _json_format_to_store_systems_in_root
         = "{{"
         + "\"id\" : {0}, "
         + "\"text\" : \"{1}\", "
         + "\"children\" : [{2}]}}";
 
       json = string.Format(
-        _json_format_to_store_systrms_in_root,
+        _json_format_to_store_systems_in_root,
         -1, doc.Title, json_systems );
 
       Debug.Print( json );
