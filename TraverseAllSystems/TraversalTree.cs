@@ -27,6 +27,7 @@ using System.Xml;
 using Autodesk.Revit.DB;
 using Autodesk.Revit.DB.Mechanical;
 using Autodesk.Revit.DB.Plumbing;
+using Autodesk.Revit.DB.Electrical;
 #endregion // Namespaces
 
 namespace TraverseAllSystems
@@ -55,7 +56,7 @@ namespace TraverseAllSystems
     const string _json_format_to_store_children_in_parent
       = "{{"
       + "\"id\" : \"{0}\", "
-      + "\"text\" : \"{1}\", "
+      + "\"name\" : \"{1}\", "
       + "\"children\" : [{2}]}}";
     #endregion // JSON Output Format Strings
 
@@ -196,7 +197,7 @@ namespace TraverseAllSystems
     #region JSON Output
     static string GetName( Element e )
     {
-      return e.Name.Replace( "\"", "'" );
+      return e.Name.Replace( "\"", "\\\"" );
     }
 
     static string GetId( Element e )
@@ -250,6 +251,9 @@ namespace TraverseAllSystems
       string json = string.Format(
         _json_format_to_store_children_in_parent,
         GetId( e ), GetName( e ), json_kids );
+
+      //Todo: properties print
+
 
       return json;
     }
@@ -320,6 +324,18 @@ namespace TraverseAllSystems
       }
     }
     #endregion // XML Output
+
+    public void CollectUniqueIds( System.Text.StringBuilder sb )
+    {
+      Element element = GetElementById( this.m_Id );
+
+
+      sb.Append( "\"" + GetId( element ) + "\"," );
+      foreach( TreeNode node in this.m_childNodes )
+      {
+        node.CollectUniqueIds( sb );
+      }
+    }
   }
 
   /// <summary>
@@ -327,6 +343,10 @@ namespace TraverseAllSystems
   /// </summary>
   public class TraversalTree
   {
+    public static byte MECHANICAL_MASK = 1;
+    public static byte ELECTRICAL_MASK = 2;
+    public static byte PIPING_MAKS = 4;
+
     #region Member variables
     /// <summary>
     /// Active Revit document
@@ -818,6 +838,37 @@ namespace TraverseAllSystems
       writer.WriteStartElement( "Path" );
       m_startingElementNode.DumpIntoXML( writer );
       writer.WriteEndElement();
+    }
+
+    public void CollectUniqueIds( System.Text.StringBuilder[] sbs )
+    {
+      System.Text.StringBuilder conn_sb = new System.Text.StringBuilder();
+      if( this.m_startingElementNode != null )
+      {
+        conn_sb.Append( "{ \"id\":\"" + this.m_system.UniqueId + "\",\"name\":\"" + this.m_system.Name.Replace( "\"", "\\\"" ) + "\", \"children\":[], \"udids\":[" );
+        this.m_startingElementNode.CollectUniqueIds( conn_sb );
+        if( conn_sb[conn_sb.Length - 1] == ',' )
+        {
+          conn_sb.Remove( conn_sb.Length - 1, 1 );
+        }
+        conn_sb.Append( "]}," );
+        String str = conn_sb.ToString();
+
+        if( this.m_system is MechanicalSystem )
+        {
+          sbs[0].Append( str );
+        }
+        if( this.m_system is ElectricalSystem )
+        {
+
+          sbs[1].Append( str );
+        }
+        if( this.m_system is PipingSystem )
+        {
+          sbs[2].Append( str );
+        }
+      }
+
     }
     #endregion // XML Output
   }

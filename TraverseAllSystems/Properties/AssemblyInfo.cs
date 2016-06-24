@@ -52,6 +52,8 @@ using System.Runtime.InteropServices;
 // 2016-06-24 2017.0.0.12 added json sample data from rme_advanced_sample_model
 // 2016-06-24 2017.0.0.13 removed duplicate root id -1
 // 2016-06-24 2017.0.0.14 store entire json graph for all systems on project info instead of separate subgraph on each individual system
+// 2016-06-24 2017.0.0.15 before pull request #1 by @ChengZY
+// 2016-06-24 2017.0.0.16 integrated pull request #1 by @ChengZY
 //
-[assembly: AssemblyVersion( "2017.0.0.14" )]
-[assembly: AssemblyFileVersion( "2017.0.0.14" )]
+[assembly: AssemblyVersion( "2017.0.0.16" )]
+[assembly: AssemblyFileVersion( "2017.0.0.16" )]

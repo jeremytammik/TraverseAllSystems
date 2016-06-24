@@ -9,6 +9,7 @@ using Autodesk.Revit.DB;
 using Autodesk.Revit.DB.Mechanical;
 using Autodesk.Revit.DB.Plumbing;
 using Autodesk.Revit.UI;
+using Autodesk.Revit.DB.Electrical;
 #endregion
 
 namespace TraverseAllSystems
@@ -17,17 +18,19 @@ namespace TraverseAllSystems
   public class Command : IExternalCommand
   {
     /// <summary>
-    /// Return true to include this system in the 
+    /// Return true to include this system in the
     /// exported system graphs.
     /// </summary>
     static bool IsDesirableSystemPredicate( MEPSystem s )
     {
       return 1 < s.Elements.Size
         && !s.Name.Equals( "unassigned" )
-        && ( ( s is MechanicalSystem 
+        && ( ( s is MechanicalSystem
             && ( (MechanicalSystem) s ).IsWellConnected )
-          || ( s is PipingSystem 
-            && ( (PipingSystem) s ).IsWellConnected ) );
+          || ( s is PipingSystem
+            && ( (PipingSystem) s ).IsWellConnected )
+            || ( s is ElectricalSystem
+            && ( (ElectricalSystem) s ).IsMultipleNetwork ) );
     }
 
     /// <summary>
@@ -69,17 +72,17 @@ namespace TraverseAllSystems
       // Check for shared parameter
       // to store graph information.
 
-      // Determine element from which to retrieve 
+      // Determine element from which to retrieve
       // shared parameter definition.
 
-      Element json_storage_element 
+      Element json_storage_element
         = Options.StoreSeparateJsonGraphOnEachSystem
           ? desirableSystems.First<MEPSystem>()
           : new FilteredElementCollector( doc )
             .OfClass( typeof( ProjectInfo ) )
             .FirstElement();
 
-      Definition def = SharedParameterMgr.GetDefinition( 
+      Definition def = SharedParameterMgr.GetDefinition(
         json_storage_element );
 
       if( null == def )
@@ -92,7 +95,7 @@ namespace TraverseAllSystems
 
         SharedParameterMgr.Create( doc );
 
-        def = SharedParameterMgr.GetDefinition( 
+        def = SharedParameterMgr.GetDefinition(
           json_storage_element );
 
         if( null == def )
@@ -118,6 +121,12 @@ namespace TraverseAllSystems
       using( Transaction t = new Transaction( doc ) )
       {
         t.Start( "Determine MEP Graph Structure and Store in JSON Shared Parameter" );
+        System.Text.StringBuilder[] sbs = new System.Text.StringBuilder[3];
+        for( int i = 0; i < 3; ++i )
+        {
+          sbs[i] = new System.Text.StringBuilder();
+          sbs[i].Append( "[" );
+        }
 
         foreach( MEPSystem system in desirableSystems )
         {
@@ -128,7 +137,7 @@ namespace TraverseAllSystems
 
           FamilyInstance root = system.BaseEquipment;
 
-          // Traverse the system and dump the 
+          // Traverse the system and dump the
           // traversal graph into an XML file
 
           TraversalTree tree = new TraversalTree( system );
@@ -142,7 +151,7 @@ namespace TraverseAllSystems
 
             tree.DumpIntoXML( filename );
 
-            // Uncomment to preview the 
+            // Uncomment to preview the
             // resulting XML structure
 
             //Process.Start( fileName );
@@ -151,7 +160,7 @@ namespace TraverseAllSystems
               ? tree.DumpToJsonBottomUp()
               : tree.DumpToJsonTopDown();
 
-            Debug.Assert( 2 < json.Length, 
+            Debug.Assert( 2 < json.Length,
               "expected valid non-empty JSON graph data" );
 
             Debug.Print( json );
@@ -168,14 +177,41 @@ namespace TraverseAllSystems
             ++nJsonGraphs;
             ++nXmlFiles;
           }
+          tree.CollectUniqueIds( sbs );
         }
+
+        for( int i = 0; i < 3; ++i )
+        {
+          if( sbs[i][sbs[i].Length - 1] == ',' )
+          {
+            sbs[i].Remove( sbs[i].Length - 1, 1 );
+          }
+          sbs[i].Append( "]" );
+        }
+
+        System.Text.StringBuilder sb = new System.Text.StringBuilder();
+        sb.Append( "{\"id\": 1 , \"name\" : \"MEP Systems\" , \"children\" : [{\"id\": 2 , \"name\": \"Mechanical System\",\"children\":" );
+        sb.Append( sbs[0].ToString() );
+
+        sb.Append( "},{\"id\":3,\"name\":\"Electrical System\", \"children\":" );
+        sb.Append( sbs[1].ToString() );
+
+        sb.Append( "},{\"id\":4,\"name\":\"Piping System\", \"children\":" );
+        sb.Append( sbs[2].ToString() );
+        sb.Append( "}]}" );
+
+        System.IO.StreamWriter file = new System.IO.StreamWriter( Path.ChangeExtension( Path.Combine( outputFolder, @"jsonData" ), "json" ) );
+        file.WriteLine( sb.ToString() );
+        file.Flush();
+        file.Close();
+
         t.Commit();
       }
 
       string main = string.Format(
         "{0} XML files and {1} JSON graphs ({2} bytes) "
         + "generated in {3} ({4} total systems, {5} desirable):",
-        nXmlFiles, nJsonGraphs, nJsonBytes, 
+        nXmlFiles, nJsonGraphs, nJsonBytes,
         outputFolder, nAllSystems, nDesirableSystems );
 
       List<string> system_list = desirableSystems
@@ -188,7 +224,7 @@ namespace TraverseAllSystems
       string detail = string.Join( ", ",
         system_list.ToArray<string>() );
 
-      TaskDialog dlg = new TaskDialog( 
+      TaskDialog dlg = new TaskDialog(
         nXmlFiles.ToString() + " Systems" );
 
       dlg.MainInstruction = main;
