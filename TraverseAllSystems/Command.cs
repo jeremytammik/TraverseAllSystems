@@ -212,10 +212,18 @@ namespace TraverseAllSystems
 
       if( Options.StoreEntireJsonGraphOnProjectInfo )
       {
-        Parameter p = json_storage_element
+        using( Transaction t = new Transaction( doc ) )
+        {
+          t.Start( "Store MEP Graph Structure "
+            + "in JSON Shared Parameter" );
+
+          Parameter p = json_storage_element
           .get_Parameter( def );
 
-        p.Set( json );
+          p.Set( json );
+
+          t.Commit();
+        }
       }
 
       return Result.Succeeded;
