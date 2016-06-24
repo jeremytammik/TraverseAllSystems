@@ -49,6 +49,7 @@ using System.Runtime.InteropServices;
 // 2016-06-23 2017.0.0.9 cleaned up for publication
 // 2016-06-23 2017.0.0.10 implemented jstree test file and verified proper tree population
 // 2016-06-23 2017.0.0.11 implemented test page, gh-pages, test link, separate test treedata.json, master and gh-pages syncing
+// 2016-06-24 2017.0.0.12 added json sample data from rme_advanced_sample_model
 //
-[assembly: AssemblyVersion( "2017.0.0.11" )]
-[assembly: AssemblyFileVersion( "2017.0.0.11" )]
+[assembly: AssemblyVersion( "2017.0.0.12" )]
+[assembly: AssemblyFileVersion( "2017.0.0.12" )]
