@@ -100,6 +100,11 @@ the [jsTree JSON spec](https://www.jstree.com/docs/json).
 }
 ```
 
+## Test
+
+Here is a link to the [test jsTree](https://jeremytammik.github.io/TraverseAllSystems/test) populated from the USC Revit test model.
+
+
 ## Author
 
 Jeremy Tammik,
