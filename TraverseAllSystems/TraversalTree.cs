@@ -194,6 +194,18 @@ namespace TraverseAllSystems
     #endregion // GetElementById
 
     #region JSON Output
+    static string GetName( Element e )
+    {
+      return e.Name.Replace( "\"", "'" );
+    }
+
+    static string GetId( Element e )
+    {
+      return Options.StoreUniqueId
+        ? "\"" + e.UniqueId + "\""
+        : e.Id.IntegerValue.ToString();
+    }
+
     /// <summary>
     /// Add JSON strings representing all children 
     /// of this node to the given collection.
@@ -203,14 +215,11 @@ namespace TraverseAllSystems
       string parent_id )
     {
       Element e = GetElementById( m_Id );
-
-      string id = Options.StoreUniqueId
-        ? "\"" + e.UniqueId + "\""
-        : m_Id.IntegerValue.ToString();
+      string id = GetId( e );
 
       string json = string.Format(
         _json_format_to_store_parent_in_child,
-        id, e.Name, parent_id );
+        id, GetName( e ), parent_id );
 
       json_collector.Add( json );
 
@@ -229,10 +238,6 @@ namespace TraverseAllSystems
     {
       Element e = GetElementById( m_Id );
 
-      string id = Options.StoreUniqueId
-        ? e.UniqueId
-        : m_Id.IntegerValue.ToString();
-
       List<string> json_collector = new List<string>();
 
       foreach( TreeNode child in m_childNodes )
@@ -244,7 +249,7 @@ namespace TraverseAllSystems
 
       string json = string.Format(
         _json_format_to_store_children_in_parent,
-        id, e.Name, json_kids );
+        GetId( e ), GetName( e ), json_kids );
 
       return json;
     }

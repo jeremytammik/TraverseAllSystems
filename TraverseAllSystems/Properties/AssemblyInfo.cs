@@ -46,6 +46,7 @@ using System.Runtime.InteropServices;
 // 2016-06-23 2017.0.0.7 implemented storage of top-down system graph in json
 // 2016-06-23 2017.0.0.8 cleaned up for publication
 // 2016-06-23 2017.0.0.8 automatically create shared parameter if needed, eliminated separate command
+// 2016-06-23 2017.0.0.8 wrap strings in double quotes and validated json output
 //
 [assembly: AssemblyVersion( "2017.0.0.8" )]
 [assembly: AssemblyFileVersion( "2017.0.0.8" )]
