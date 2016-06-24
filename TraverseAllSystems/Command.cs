@@ -69,8 +69,18 @@ namespace TraverseAllSystems
       // Check for shared parameter
       // to store graph information.
 
-      Definition def = SharedParameterMgr.GetDefinition(
-        desirableSystems.First<MEPSystem>() );
+      // Determine element from which to retrieve 
+      // shared parameter definition.
+
+      Element json_storage_element 
+        = Options.StoreSeparateJsonGraphOnEachSystem
+          ? desirableSystems.First<MEPSystem>()
+          : new FilteredElementCollector( doc )
+            .OfClass( typeof( ProjectInfo ) )
+            .FirstElement();
+
+      Definition def = SharedParameterMgr.GetDefinition( 
+        json_storage_element );
 
       if( null == def )
       {
@@ -82,8 +92,8 @@ namespace TraverseAllSystems
 
         SharedParameterMgr.Create( doc );
 
-        def = SharedParameterMgr.GetDefinition(
-          desirableSystems.First<MEPSystem>() );
+        def = SharedParameterMgr.GetDefinition( 
+          json_storage_element );
 
         if( null == def )
         {
@@ -202,12 +212,9 @@ namespace TraverseAllSystems
 
       if( Options.StoreEntireJsonGraphOnProjectInfo )
       {
-        Element project_info 
-          = new FilteredElementCollector( doc )
-            .OfClass( typeof( ProjectInfo ) )
-            .FirstElement();
+        Parameter p = json_storage_element
+          .get_Parameter( def );
 
-        Parameter p = project_info.get_Parameter( def );
         p.Set( json );
       }
 
