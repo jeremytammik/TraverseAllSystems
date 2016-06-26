@@ -59,6 +59,31 @@ namespace TraverseAllSystems
       + "\"id\" : \"{0}\", "
       + "\"{1}\" : \"{2}\", "
       + "\"children\" : [{3}]}}";
+
+    /// <summary>
+    /// Create a new JSON parent node for the top-down graph.
+    /// </summary>
+    public static string CreateJsonParentNode(
+      string id,
+      string label,
+      string json_kids )
+    {
+      return string.Format(
+        _json_format_to_store_children_in_parent,
+        id, Options.NodeLabelTag, label, json_kids );
+    }
+
+    /// <summary>
+    /// Create a new JSON parent node for the top-down graph.
+    /// </summary>
+    public static string CreateJsonParentNode(
+      string id,
+      string label,
+      string[] json_kids )
+    {
+      return CreateJsonParentNode( id, label,
+        string.Join( ",", json_kids ) );
+    }
     #endregion // JSON Output Format Strings
 
     #region Member variables
@@ -196,12 +221,12 @@ namespace TraverseAllSystems
     #endregion // GetElementById
 
     #region JSON Output
-    static string GetName( Element e )
+    public static string GetName( Element e )
     {
       return e.Name.Replace( "\"", "\\\"" );
     }
 
-    static string GetId( Element e )
+    public static string GetId( Element e )
     {
       return Options.StoreUniqueId
         ? e.UniqueId
@@ -248,15 +273,10 @@ namespace TraverseAllSystems
         json_collector.Add( child.DumpToJsonTopDown() );
       }
 
-      string json_kids = string.Join( ",", json_collector );
+      string json = CreateJsonParentNode( GetId( e ), 
+        GetName( e ), json_collector.ToArray() );
 
-      string json = string.Format(
-        _json_format_to_store_children_in_parent,
-        GetId( e ), Options.NodeLabelTag, GetName( e ), 
-        json_kids );
-
-      //Todo: properties print
-
+      // Todo: properties print
 
       return json;
     }
@@ -846,16 +866,22 @@ namespace TraverseAllSystems
     public void CollectUniqueIds( StringBuilder[] sbs )
     {
       StringBuilder conn_sb = new StringBuilder();
+
       if( this.m_startingElementNode != null )
       {
-        conn_sb.Append( "{ \"id\":\"" + this.m_system.UniqueId + "\",\"name\":\"" + this.m_system.Name.Replace( "\"", "\\\"" ) + "\", \"children\":[], \"udids\":[" );
+        conn_sb.Append( "{ \"id\":\"" + TreeNode.GetId( m_system )
+          + "\",\"name\":\"" + TreeNode.GetName( m_system ) 
+          + "\", \"children\":[], \"udids\":[" );
+
         this.m_startingElementNode.CollectUniqueIds( conn_sb );
+
         if( conn_sb[conn_sb.Length - 1] == ',' )
         {
           conn_sb.Remove( conn_sb.Length - 1, 1 );
         }
         conn_sb.Append( "]}," );
-        String str = conn_sb.ToString();
+
+        string str = conn_sb.ToString();
 
         if( this.m_system is MechanicalSystem )
         {
@@ -871,7 +897,6 @@ namespace TraverseAllSystems
           sbs[2].Append( str );
         }
       }
-
     }
     #endregion // XML Output
   }

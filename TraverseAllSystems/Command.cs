@@ -35,6 +35,26 @@ namespace TraverseAllSystems
     }
 
     /// <summary>
+    /// The thee MEP disciplines
+    /// </summary>
+    public enum MepDomain
+    { 
+      Invalid = -1,
+      Mechanical = 0,
+      Electrical = 1,
+      Piping = 2,
+      Count = 3
+    }
+
+    MepDomain GetMepDomain( MEPSystem s )
+    {
+      return ( s is MechanicalSystem ) ? MepDomain.Mechanical
+        : (( s is ElectricalSystem ) ? MepDomain.Electrical
+          : (( s is PipingSystem ) ? MepDomain.Piping
+            : MepDomain.Invalid));
+    }
+
+    /// <summary>
     /// Create a and return the path of a random temporary directory.
     /// </summary>
     static string GetTemporaryDirectory()
@@ -112,13 +132,21 @@ namespace TraverseAllSystems
 
       string json;
 
-      List<string> json_collector = new List<string>();
+      // Three separate collections for mechanical,
+      // electrical and piping systems:
+
+      List<string>[] json_collector 
+        = new List<string>[(int)MepDomain.Count] {
+          new List<string>(),
+          new List<string>(),
+          new List<string>() };
 
       using( Transaction t = new Transaction( doc ) )
       {
         t.Start( "Determine MEP Graph Structure and Store in JSON Shared Parameter" );
 
         StringBuilder[] sbs = new StringBuilder[3];
+
         for( int i = 0; i < 3; ++i )
         {
           sbs[i] = new StringBuilder();
@@ -159,7 +187,10 @@ namespace TraverseAllSystems
 
             Debug.Print( json );
 
-            json_collector.Add( json );
+            // Save this system hierarchy JSON in the
+            // appropriate domain specific collector.
+
+            json_collector[(int)GetMepDomain(system)].Add( json );
 
             if( Options.StoreSeparateJsonGraphOnEachSystem )
             {
@@ -197,7 +228,8 @@ namespace TraverseAllSystems
 
         StreamWriter file = new StreamWriter( 
           Path.ChangeExtension( 
-            Path.Combine( outputFolder, @"jsonData" ), "json" ) );
+            Path.Combine( outputFolder, "jsonData" ), 
+              "json" ) );
 
         file.WriteLine( sb.ToString() );
         file.Flush();
@@ -206,7 +238,7 @@ namespace TraverseAllSystems
         t.Commit();
       }
 
-      string main = string.Format(
+      string msg = string.Format(
         "{0} XML files and {1} JSON graphs ({2} bytes) "
         + "generated in {3} ({4} total systems, {5} desirable):",
         nXmlFiles, nJsonGraphs, nJsonBytes,
@@ -225,23 +257,26 @@ namespace TraverseAllSystems
       TaskDialog dlg = new TaskDialog(
         nXmlFiles.ToString() + " Systems" );
 
-      dlg.MainInstruction = main;
+      dlg.MainInstruction = msg;
       dlg.MainContent = detail;
 
       dlg.Show();
 
-      string json_systems = string.Join( ",", json_collector );
+      string[] json_systems = new string[3];
 
-      const string _json_format_to_store_systems_in_root
-        = "{{"
-        + "\"id\" : {0}, "
-        + "\"{1}\" : \"{2}\", "
-        + "\"children\" : [{3}]}}";
+      for( MepDomain d = MepDomain.Mechanical; 
+        d < MepDomain.Count; ++d )
+      {
+        json_collector[(int) d].Sort();
 
-      json = string.Format(
-        _json_format_to_store_systems_in_root,
-        -1, Options.NodeLabelTag, doc.Title, 
-        json_systems );
+        json_systems[(int)d] 
+          = TreeNode.CreateJsonParentNode( 
+            ((int)d).ToString(), d.ToString(), 
+            json_collector[(int) d].ToArray<string>() );
+      }
+
+      json = TreeNode.CreateJsonParentNode( 
+        "-1", doc.Title, json_systems );
 
       Debug.Print( json );
 
