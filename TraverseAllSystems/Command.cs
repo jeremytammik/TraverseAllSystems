@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Text;
 using Autodesk.Revit.ApplicationServices;
 using Autodesk.Revit.Attributes;
 using Autodesk.Revit.DB;
+using Autodesk.Revit.DB.Electrical;
 using Autodesk.Revit.DB.Mechanical;
 using Autodesk.Revit.DB.Plumbing;
 using Autodesk.Revit.UI;
-using Autodesk.Revit.DB.Electrical;
 #endregion
 
 namespace TraverseAllSystems
@@ -29,7 +30,7 @@ namespace TraverseAllSystems
             && ( (MechanicalSystem) s ).IsWellConnected )
           || ( s is PipingSystem
             && ( (PipingSystem) s ).IsWellConnected )
-            || ( s is ElectricalSystem
+          || ( s is ElectricalSystem
             && ( (ElectricalSystem) s ).IsMultipleNetwork ) );
     }
 
@@ -87,12 +88,6 @@ namespace TraverseAllSystems
 
       if( null == def )
       {
-        //message = "Please initialise the MEP graph "
-        //  + "storage shared parameter before "
-        //  + "launching this command.";
-
-        //return Result.Failed;
-
         SharedParameterMgr.Create( doc );
 
         def = SharedParameterMgr.GetDefinition(
@@ -109,31 +104,30 @@ namespace TraverseAllSystems
 
       string outputFolder = GetTemporaryDirectory();
 
-      string json;
       int nXmlFiles = 0;
       int nJsonGraphs = 0;
       int nJsonBytes = 0;
 
       // Collect one JSON string per system.
 
+      string json;
+
       List<string> json_collector = new List<string>();
 
       using( Transaction t = new Transaction( doc ) )
       {
         t.Start( "Determine MEP Graph Structure and Store in JSON Shared Parameter" );
-        System.Text.StringBuilder[] sbs = new System.Text.StringBuilder[3];
+
+        StringBuilder[] sbs = new StringBuilder[3];
         for( int i = 0; i < 3; ++i )
         {
-          sbs[i] = new System.Text.StringBuilder();
+          sbs[i] = new StringBuilder();
           sbs[i].Append( "[" );
         }
 
         foreach( MEPSystem system in desirableSystems )
         {
           Debug.Print( system.Name );
-
-          // Debug test -- limit to HWS systems.
-          //if( !system.Name.StartsWith( "HWS" ) ) { continue; }
 
           FamilyInstance root = system.BaseEquipment;
 
@@ -189,7 +183,8 @@ namespace TraverseAllSystems
           sbs[i].Append( "]" );
         }
 
-        System.Text.StringBuilder sb = new System.Text.StringBuilder();
+        StringBuilder sb = new StringBuilder();
+
         sb.Append( "{\"id\": 1 , \"name\" : \"MEP Systems\" , \"children\" : [{\"id\": 2 , \"name\": \"Mechanical System\",\"children\":" );
         sb.Append( sbs[0].ToString() );
 
@@ -200,7 +195,10 @@ namespace TraverseAllSystems
         sb.Append( sbs[2].ToString() );
         sb.Append( "}]}" );
 
-        System.IO.StreamWriter file = new System.IO.StreamWriter( Path.ChangeExtension( Path.Combine( outputFolder, @"jsonData" ), "json" ) );
+        StreamWriter file = new StreamWriter( 
+          Path.ChangeExtension( 
+            Path.Combine( outputFolder, @"jsonData" ), "json" ) );
+
         file.WriteLine( sb.ToString() );
         file.Flush();
         file.Close();
@@ -237,12 +235,13 @@ namespace TraverseAllSystems
       const string _json_format_to_store_systems_in_root
         = "{{"
         + "\"id\" : {0}, "
-        + "\"name\" : \"{1}\", "
-        + "\"children\" : [{2}]}}";
+        + "\"{1}\" : \"{2}\", "
+        + "\"children\" : [{3}]}}";
 
       json = string.Format(
         _json_format_to_store_systems_in_root,
-        -1, doc.Title, json_systems );
+        -1, Options.NodeLabelTag, doc.Title, 
+        json_systems );
 
       Debug.Print( json );
 

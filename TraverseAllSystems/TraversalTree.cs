@@ -23,11 +23,12 @@
 #region Namespaces
 using System;
 using System.Collections.Generic;
+using System.Text;
 using System.Xml;
 using Autodesk.Revit.DB;
+using Autodesk.Revit.DB.Electrical;
 using Autodesk.Revit.DB.Mechanical;
 using Autodesk.Revit.DB.Plumbing;
-using Autodesk.Revit.DB.Electrical;
 #endregion // Namespaces
 
 namespace TraverseAllSystems
@@ -45,8 +46,8 @@ namespace TraverseAllSystems
     const string _json_format_to_store_parent_in_child
       = "{{"
       + "\"id\" : {0}, "
-      + "\"name\" : \"{1}\", "
-      + "\"parent\" : {2}}}";
+      + "\"{1}\" : \"{2}\", "
+      + "\"parent\" : {3}}}";
 
     /// <summary>
     /// Format a tree node to JSON storing a 
@@ -56,8 +57,8 @@ namespace TraverseAllSystems
     const string _json_format_to_store_children_in_parent
       = "{{"
       + "\"id\" : \"{0}\", "
-      + "\"name\" : \"{1}\", "
-      + "\"children\" : [{2}]}}";
+      + "\"{1}\" : \"{2}\", "
+      + "\"children\" : [{3}]}}";
     #endregion // JSON Output Format Strings
 
     #region Member variables
@@ -219,8 +220,9 @@ namespace TraverseAllSystems
       string id = GetId( e );
 
       string json = string.Format(
-        _json_format_to_store_parent_in_child,
-        id, GetName( e ), parent_id );
+        _json_format_to_store_parent_in_child, id, 
+        Options.NodeLabelTag, GetName( e ), 
+        parent_id );
 
       json_collector.Add( json );
 
@@ -250,7 +252,8 @@ namespace TraverseAllSystems
 
       string json = string.Format(
         _json_format_to_store_children_in_parent,
-        GetId( e ), GetName( e ), json_kids );
+        GetId( e ), Options.NodeLabelTag, GetName( e ), 
+        json_kids );
 
       //Todo: properties print
 
@@ -325,7 +328,7 @@ namespace TraverseAllSystems
     }
     #endregion // XML Output
 
-    public void CollectUniqueIds( System.Text.StringBuilder sb )
+    public void CollectUniqueIds( StringBuilder sb )
     {
       Element element = GetElementById( this.m_Id );
 
@@ -840,9 +843,9 @@ namespace TraverseAllSystems
       writer.WriteEndElement();
     }
 
-    public void CollectUniqueIds( System.Text.StringBuilder[] sbs )
+    public void CollectUniqueIds( StringBuilder[] sbs )
     {
-      System.Text.StringBuilder conn_sb = new System.Text.StringBuilder();
+      StringBuilder conn_sb = new StringBuilder();
       if( this.m_startingElementNode != null )
       {
         conn_sb.Append( "{ \"id\":\"" + this.m_system.UniqueId + "\",\"name\":\"" + this.m_system.Name.Replace( "\"", "\\\"" ) + "\", \"children\":[], \"udids\":[" );

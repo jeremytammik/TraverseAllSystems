@@ -25,5 +25,6 @@
     public static bool StoreSeparateJsonGraphOnEachSystem
       = !StoreEntireJsonGraphOnProjectInfo;
 
+    public static string NodeLabelTag = "text";
   }
 }

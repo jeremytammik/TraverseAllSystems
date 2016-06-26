@@ -1,0 +1,109 @@
+USC_Forge
+
+2D/3D Synchronization (markup, save)
+create a toolbar button to show/hide 2D section
+create new 2D viewer attached below 3D viewer
+Main Window
+Functional Buttons (show/hide sub-function)
+                  3.create a toolbar button to show/hide Viewpoints panel
+                  4.create a toolbar button to show/hide System panel
+
+Panels (Triggered by Toolbar Button)
+                  5.create a panel for Viewpoints
+                  6.create a panel for System
+Viewpoints (room, level)
+                 7. Generate building hierarchy list (level&room) in viewpoints panel
+                 8. Implement search form in panel for building level/room
+                 9. Choose exact object (room, level) in viewpoints list
+                10.Move camera to viewpoint of selected object(s)
+System (colorization)
+                11.Generate system hierarchy list in systems panel: http://thebuildingcoder.typepad.com/blog/2013/02/simple-mep-system-traversal.html
+
+http://thebuildingcoder.typepad.com/blog/2009/06/revit-mep-api.html
+
+Revit: UniqueId
+Forge viewer: dbid, property external id == guid → UniqueId
+Getting Started with the Revit API:
+http://thebuildingcoder.typepad.com/blog/about-the-author.html#2
+
+
+                12.Highlight selected system by clicking list item
+                17.Implement search form in panel for systems
+Properties Panel
+                 13.generate a link to database (open a new tag)
+                 14.build a new row named “Link to Database” in property panel
+Backend (Server Side)
+     15.auth token service
+     16.file upload (currently A360)
+
+
+
+
+Links from usc website
+Issue report
+move element in webviewer
+------------------------------------------------------------------------
+
+Revit (.rvt)                                   navisworks(.nwd)
+Archi+MEP                                  has room viewpoints (manual add)
+                                                     section box
+
+PS: A360 cannot be used as backend
+
+
+Shunni Li：
+Created a link property in Properties panel linking to USC equipment database (for both .rvt and .nwd files)
+Implemented recuisively collapsing all the items in Systems panel
+changed some styles of html
+
+
+
+
+
+Jiayuan Huang:
+Implement viewpoints function of the viewer
+create toolbar button and panel for viewpoints
+collect roomtext data
+create custom tree for display data
+move camera to fit the view of a room
+
+
+
+Zhonghao Wang
+back-end: using node js and build on the AWS server
+upload the rvt&nwd file to the Autodesk server and translate the file
+use the server to get the urn(document Id) & access token
+dynamically router the request as a REST server
+front-end:js
+get the parameter through its own url
+ajax call to get data
+
+
+
+
+Jibin Lyu
+Implemented system information showing functionality
+Created a toolbar button to show / hide System Information panel
+Customized a System panel making use of Property List Panel to show system informaton data
+Parsed JSON format system information data to properly fit System panel
+Implemented one click function of the element in the panel to highlight corresponding element in the graph
+Implemented double click function of the element in the panel to show up its Property panel
+Beautified website UI
+
+
+
+
+
+
+Ziyu Cheng:
+Implemented button to show/hide 2D Map view.
+Implemented 2D viewer and 3D viewer synchronization.
+Study Revit-api create Revit add-in to generate system hierarchy relation and parse data into tree-structured json file.
+
+
+
+http://uscforge-env.us-west-2.elasticbeanstalk.com
+
+---------------------------------------
+
+https://myhub.autodesk360.com/ue29c2737/shares/public/SH7f1edQT22b515c761e848c5b75f889aefd

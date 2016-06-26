@@ -54,6 +54,7 @@ using System.Runtime.InteropServices;
 // 2016-06-24 2017.0.0.14 store entire json graph for all systems on project info instead of separate subgraph on each individual system
 // 2016-06-24 2017.0.0.15 before pull request #1 by @ChengZY
 // 2016-06-24 2017.0.0.16 integrated pull request #1 by @ChengZY
+// 2016-06-25 2017.0.0.17 implemented Options.NodeLabelTag to switch more easily between 'text' and 'name' for node label
 //
-[assembly: AssemblyVersion( "2017.0.0.16" )]
-[assembly: AssemblyFileVersion( "2017.0.0.16" )]
+[assembly: AssemblyVersion( "2017.0.0.17" )]
+[assembly: AssemblyFileVersion( "2017.0.0.17" )]
