@@ -25,6 +25,10 @@
     public static bool StoreSeparateJsonGraphOnEachSystem
       = !StoreEntireJsonGraphOnProjectInfo;
 
+    /// <summary>
+    /// The JSON tag specifying the tree node label, 
+    /// normally either 'name' or 'text'.
+    /// </summary>
     public static string NodeLabelTag = "text";
   }
 }

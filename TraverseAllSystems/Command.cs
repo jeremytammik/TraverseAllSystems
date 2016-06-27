@@ -267,7 +267,13 @@ namespace TraverseAllSystems
       for( MepDomain d = MepDomain.Mechanical; 
         d < MepDomain.Count; ++d )
       {
-        json_collector[(int) d].Sort();
+        // Compare the systems using the label value,
+        // which comes after the first comma.
+
+        json_collector[(int) d].Sort( (s,t) 
+          => string.Compare(
+            s.Substring(s.IndexOf(",")), 
+            t.Substring( t.IndexOf( "," ) ) ) );
 
         json_systems[(int)d] 
           = TreeNode.CreateJsonParentNode( 

@@ -223,7 +223,8 @@ namespace TraverseAllSystems
     #region JSON Output
     public static string GetName( Element e )
     {
-      return e.Name.Replace( "\"", "\\\"" );
+      return Util.ElementDescription( e )
+        .Replace( "\"", "\\\"" );
     }
 
     public static string GetId( Element e )

@@ -56,6 +56,7 @@ using System.Runtime.InteropServices;
 // 2016-06-24 2017.0.0.16 integrated pull request #1 by @ChengZY
 // 2016-06-25 2017.0.0.17 implemented Options.NodeLabelTag to switch more easily between 'text' and 'name' for node label
 // 2016-06-26 2017.0.0.17 split graph into three domain-specific subgraphs
+// 2016-06-26 2017.0.0.17 sort each domain specific graph and display full element description
 //
 [assembly: AssemblyVersion( "2017.0.0.17" )]
 [assembly: AssemblyFileVersion( "2017.0.0.17" )]
