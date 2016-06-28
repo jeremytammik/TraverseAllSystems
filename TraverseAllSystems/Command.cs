@@ -263,6 +263,7 @@ namespace TraverseAllSystems
       dlg.Show();
 
       string[] json_systems = new string[3];
+      int id = doc.Title.GetHashCode();
 
       for( MepDomain d = MepDomain.Mechanical; 
         d < MepDomain.Count; ++d )
@@ -277,12 +278,13 @@ namespace TraverseAllSystems
 
         json_systems[(int)d] 
           = TreeNode.CreateJsonParentNode( 
-            ((int)d).ToString(), d.ToString(), 
+            (++id).ToString(), d.ToString(), 
             json_collector[(int) d].ToArray<string>() );
       }
 
       json = TreeNode.CreateJsonParentNode( 
-        "-1", doc.Title, json_systems );
+        doc.Title.GetHashCode().ToString(), 
+        doc.Title, json_systems );
 
       Debug.Print( json );
 

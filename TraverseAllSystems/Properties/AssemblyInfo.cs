@@ -57,6 +57,7 @@ using System.Runtime.InteropServices;
 // 2016-06-25 2017.0.0.17 implemented Options.NodeLabelTag to switch more easily between 'text' and 'name' for node label
 // 2016-06-26 2017.0.0.17 split graph into three domain-specific subgraphs
 // 2016-06-26 2017.0.0.17 sort each domain specific graph and display full element description
+// 2016-06-27 2017.0.0.18 use hash code to generate unique jstree ids for top-level project, mechanical, electrical and piping nodes 
 //
-[assembly: AssemblyVersion( "2017.0.0.17" )]
-[assembly: AssemblyFileVersion( "2017.0.0.17" )]
+[assembly: AssemblyVersion( "2017.0.0.18" )]
+[assembly: AssemblyFileVersion( "2017.0.0.18" )]
