@@ -442,6 +442,19 @@ namespace TraverseAllSystems
       TreeNode startingElementNode = null;
 
       FamilyInstance equipment = m_system.BaseEquipment;
+
+      // If m_system.BaseEquipment returns null, then loop through each element in m_system and get the Mechanical Equipment
+      if (equipment == null)
+      {
+          foreach (FamilyInstance element in m_system.Elements)
+          {
+              if (element.MEPModel is MechanicalEquipment)
+              {
+                  equipment = element;
+                  break;
+              }
+          }
+      }
       //
       // If the system has base equipment then get it;
       // Otherwise get the owner of the open connector in the system
