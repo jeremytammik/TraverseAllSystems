@@ -454,10 +454,10 @@ namespace TraverseAllSystems
               }
           }
       }
-        //
-        // If the system has base equipment then get it;
-        // Otherwise get the owner of the open connector in the system
-        if( equipment != null )
+      //
+      // If the system has base equipment then get it;
+      // Otherwise get the owner of the open connector in the system
+      if( equipment != null )
       {
         startingElementNode = new TreeNode( m_document, equipment.Id );
       }
