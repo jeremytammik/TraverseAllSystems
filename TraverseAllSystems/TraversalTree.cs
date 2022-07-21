@@ -451,6 +451,7 @@ namespace TraverseAllSystems
               if (element.MEPModel is MechanicalEquipment)
               {
                   equipment = element;
+                  break;
               }
           }
       }
