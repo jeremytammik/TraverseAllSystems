@@ -80,7 +80,8 @@ namespace TraverseAllSystems
         = app.SharedParametersFilename;
 
       if( null == sharedParamsFileName
-        || 0 == sharedParamsFileName.Length )
+        || 0 == sharedParamsFileName.Length
+        || !File.Exists(sharedParamsFileName) )
       {
         string path = Path.GetTempPath();
 
