@@ -695,8 +695,10 @@ namespace TraverseAllSystems
       ConnectorSet allRefs = connector.AllRefs;
       foreach( Connector conn in allRefs )
       {
-        // Ignore non-EndConn connectors and connectors of the current element
-        if( conn.ConnectorType != ConnectorType.End ||
+        // Ignore non-EndConn or Curve connectors and connectors of the current element
+        // Reason for Curve connectors: https://github.com/jeremytammik/TraverseAllSystems/issues/5
+        if( (conn.ConnectorType != ConnectorType.End &&
+             conn.ConnectorType != ConnectorType.Curve ) ||
             conn.Owner.Id.IntegerValue.Equals( connector.Owner.Id.IntegerValue ) )
         {
           continue;
