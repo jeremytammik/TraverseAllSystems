@@ -49,11 +49,12 @@ namespace TraverseAllSystems
     static Definition CreateNewDefinition(
       DefinitionGroup group,
       string parameter_name,
-      ParameterType parameter_type )
+      //ParameterType parameter_type
+      ForgeTypeId forgeTypeId )
     {
       return group.Definitions.Create(
         new ExternalDefinitionCreationOptions(
-          parameter_name, parameter_type ) );
+          parameter_name, forgeTypeId) );
     }
 
     /// <summary>
@@ -147,9 +148,9 @@ namespace TraverseAllSystems
         // them in that case.
 
         Definition definition
-          = group.Definitions.get_Item( _shared_param_name )
-            ?? CreateNewDefinition( group,
-              _shared_param_name, ParameterType.Text );
+          = group.Definitions.get_Item(_shared_param_name)
+            ?? CreateNewDefinition(group,
+              _shared_param_name, SpecTypeId.String.Text); // ParameterType.Text
 
         doc.ParameterBindings.Insert( definition, binding,
           BuiltInParameterGroup.PG_GENERAL );

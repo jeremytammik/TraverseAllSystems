@@ -60,6 +60,7 @@ using System.Runtime.InteropServices;
 // 2016-06-27 2017.0.0.18 use hash code to generate unique jstree ids for top-level project, mechanical, electrical and piping nodes
 // 2022-07-22 2017.0.0.19 if `m_system.BaseEquipment` is `null` then iterate over elements to search for equipment
 // 2022-09-27 2017.0.0.20 merged issues 3 + 5, PR 4 + 6: check if `sharedParamsFileName` doesn't exist, and include elements with Curve ConnectorType
+// 2022-09-27 2023.0.0.0 flat migration to Revit 2023
 //
 [assembly: AssemblyVersion("2023.0.0.0")]
 [assembly: AssemblyFileVersion("2023.0.0.0")]
