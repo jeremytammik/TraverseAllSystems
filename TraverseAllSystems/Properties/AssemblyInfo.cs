@@ -61,5 +61,5 @@ using System.Runtime.InteropServices;
 // 2022-07-22 2017.0.0.19 if `m_system.BaseEquipment` is `null` then iterate over elements to search for equipment
 // 2022-09-27 2017.0.0.20 merged issues 3 + 5, PR 4 + 6: check if `sharedParamsFileName` doesn't exist, and include elements with Curve ConnectorType
 //
-[assembly: AssemblyVersion("2017.0.0.20")]
-[assembly: AssemblyFileVersion("2017.0.0.20")]
+[assembly: AssemblyVersion("2023.0.0.0")]
+[assembly: AssemblyFileVersion("2023.0.0.0")]
