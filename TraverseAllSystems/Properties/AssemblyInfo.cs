@@ -6,11 +6,11 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle( "TraverseAllSystems" )]
-[assembly: AssemblyDescription( "Revit Add-In Description for TraverseAllSystems" )]
+[assembly: AssemblyDescription("Revit add-In for MEP system traversal")]
 [assembly: AssemblyConfiguration( "" )]
 [assembly: AssemblyCompany( "Autodesk Inc." )]
 [assembly: AssemblyProduct( "TraverseAllSystems Revit C# .NET Add-In" )]
-[assembly: AssemblyCopyright( "Copyright 2016 (C) Jeremy Tammik, Autodesk Inc." )]
+[assembly: AssemblyCopyright("Copyright 2016-2022 (C) Jeremy Tammik, Autodesk Inc.")]
 [assembly: AssemblyTrademark( "" )]
 [assembly: AssemblyCulture( "" )]
 
@@ -59,5 +59,5 @@ using System.Runtime.InteropServices;
 // 2016-06-26 2017.0.0.17 sort each domain specific graph and display full element description
 // 2016-06-27 2017.0.0.18 use hash code to generate unique jstree ids for top-level project, mechanical, electrical and piping nodes 
 //
-[assembly: AssemblyVersion( "2017.0.0.18" )]
-[assembly: AssemblyFileVersion( "2017.0.0.18" )]
+[assembly: AssemblyVersion("2017.0.0.19")]
+[assembly: AssemblyFileVersion("2017.0.0.19")]
